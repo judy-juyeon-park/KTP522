@@ -1,0 +1,21 @@
+@startuml
+node "Client" {
+node "EClient" <<process>> 
+}
+
+node "Server" {
+node "EServer" <<process>> {
+    [Router] 
+    [TaleController]
+    [TaleModel]
+    [TaleDB]
+}
+}
+
+Client --> Router 
+Router --> TaleController
+TaleController <--> TaleModel
+TaleModel <--> TaleDB
+TaleController --> Client
+
+@enduml

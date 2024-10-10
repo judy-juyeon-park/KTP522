@@ -1,0 +1,11 @@
+@startuml lv2_client_erd
+
+entity TaleList {
+  *tale_id: int
+  --
+  title: String
+  create_dt: datetime
+}
+
+
+@enduml

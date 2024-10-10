@@ -1,0 +1,21 @@
+@startuml lv2_us03
+/'
+동화 음성 재생 하기
+CLI10 음성 재생 기능
+'/
+hide footbox
+
+participant Client as cli
+participant "TTS Cloud service" as cloud
+
+note over cli : 동화 내용 화면 진입
+cli -> cloud : 1. Text to speech API 호출
+
+activate cloud
+
+cloud --> cli : 2. 음성 데이터 응답
+deactivate cloud
+
+cli --> cli : 3. 음성 데이터 출력
+
+@enduml

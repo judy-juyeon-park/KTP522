@@ -1,0 +1,7 @@
+@startuml lv1_component
+component Client as cli
+component Server as svr
+component "TTS Cloud service" as tts
+cli -- svr
+cli -- tts
+@enduml

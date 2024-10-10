@@ -1,0 +1,63 @@
+@startuml lv2_module
+
+node Client{
+    package ModelC {
+        component TaleRepository
+        component TaleApiService
+        component TTSApiService
+    }
+
+    package ViewModel {
+        component TaleListViewModel
+        component TaleDetailViewModel
+    }
+
+    package View {
+        component TaleListActivity
+        component TaleDetailActivity
+    }
+
+    database TaleClientDB
+}
+
+
+
+node Server {
+
+    package Controller {
+        component Router
+        component TaleController
+    }
+
+    package ModelS {
+        component TaleModel
+    }
+
+    package Database {
+        component TaleDB
+    }
+
+    database TaleServerDB
+}
+
+
+Router --> TaleController
+TaleController <--> TaleModel
+TaleModel <--> TaleDB
+
+TaleRepository <--> TaleClientDB
+TaleRepository <--> TaleApiService
+TaleDetailViewModel <-->TTSApiService
+
+TaleListViewModel <--> TaleRepository
+TaleDetailViewModel <--> TaleRepository
+
+TaleListViewModel --> TaleListActivity
+TaleDetailViewModel --> TaleDetailActivity
+
+TaleApiService --> Router
+TaleController --> TaleApiService
+
+
+
+@enduml

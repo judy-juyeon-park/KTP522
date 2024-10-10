@@ -1,0 +1,20 @@
+@startuml lv2_logic
+package Client {
+    class ModelC
+    class ViewModel
+    class View
+}
+
+package Server {
+class Controller 
+class ModelS
+class Database 
+}
+
+ModelC <--> Controller
+Controller <--> ModelS
+ModelS <--> Database 
+ModelC <--> ViewModel
+ViewModel <--> View
+
+@enduml

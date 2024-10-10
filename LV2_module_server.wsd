@@ -1,0 +1,30 @@
+@startuml
+package "Client"{
+package "ViewModel"
+package "ModelC"
+package "View"
+}
+
+package "Server" {
+
+package "Controller" {
+    [Router]
+    [TaleController]
+}
+
+package "ModelS" {
+  [TaleModel]
+}
+
+}
+package "Database" {
+  [TaleDB]
+}
+
+Client --> [Router]
+[Router] --> [TaleController] 
+[TaleController] <--> [TaleModel]
+[TaleModel] <--> [TaleDB]
+[TaleController] --> Client
+
+@enduml

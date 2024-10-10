@@ -1,0 +1,24 @@
+@startuml lv2_us02
+/'
+동화 내용 표시하기
+SVR2 동화 내용 제공
+CLI2 동화 내용 가져오기
+CLI9 동화 페이지 구성 화면
+'/
+hide footbox
+
+
+actor User as usr
+participant Client as cli
+participant Server as svr
+
+usr -> cli : 1. 리스트에서 동화 선택하기
+activate cli
+cli -> svr : 2. 동화 내용 가져오기
+activate svr
+
+svr --> cli : 3. 동화 내용 응답
+deactivate svr
+cli --> usr : 4. 동화 내용 화면 이동 \n 동화 내용 표시
+deactivate cli
+@enduml

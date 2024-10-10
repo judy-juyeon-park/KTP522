@@ -1,0 +1,20 @@
+@startuml lv1_us01
+/'
+동화 리스트 표시하기
+SVR1 동화 리스트 제공
+CLI1 동화 리스트 표시
+CLI6 동화 목록 화면
+CLI7 동화 목록 아이템 항목
+'/
+hide footbox
+
+actor 사용자 as usr
+participant "동화읽기 서비스" as srv
+
+usr -> srv : 1. 동화 리스트 화면 진입
+activate srv
+srv -> srv : 2. 동화 리스트 가져오기
+srv --> usr : 3. 동화 리스트 보여주기
+deactivate srv
+
+@enduml

@@ -1,0 +1,22 @@
+@startuml lv2_execution
+
+skinparam rectangle {
+    BorderColor black
+    BackgroundColor lightgrey
+}
+
+node "<<process>>\nEClient" {
+    rectangle "ClientIOThread" as cio
+    rectangle "ClientUIThread"
+}
+
+node "<<process>>\nEServer" as sproc
+
+node "<<thirdparty>>\nETTSCloudSerivce" as tts {
+    
+}
+
+cio <--> sproc
+cio <--> tts
+
+@enduml

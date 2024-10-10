@@ -1,0 +1,30 @@
+@startuml lv2_deployment
+
+skinparam rectangle {
+    BorderColor black
+    BackgroundColor lightgrey
+}
+
+node Client {
+    node "<<process>>\nEClient" {
+        rectangle "ClientIOThread" as cio
+        rectangle "ClientUIThread"
+    }
+}
+
+node Server {
+    
+    node "<<process>>\nEServer" as sproc
+
+}
+node TTSCloudeService {
+  node "<<thirdparty>>\nETTSCloudSerivce" as tts {
+    
+    }
+}
+
+
+cio <--> sproc
+cio <--> tts
+
+@enduml

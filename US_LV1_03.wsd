@@ -1,0 +1,17 @@
+@startuml lv1_us03
+/'
+동화 음성 재생 하기
+CLI10 음성 재생 기능
+'/
+hide footbox
+
+actor User as usr
+participant "동화읽기 서비스" as srv
+
+usr -> srv : 1. 동화 내용 화면 진입
+activate srv
+srv -> srv : 2. 텍스트를 음성 데이터로 변환
+srv --> usr : 3. 음성 데이터 출력
+deactivate srv
+
+@enduml

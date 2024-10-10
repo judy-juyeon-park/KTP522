@@ -1,0 +1,28 @@
+@startuml lv2_us01
+/'
+동화 리스트 표시하기
+SVR1 동화 리스트 제공
+CLI1 동화 리스트 표시
+CLI6 동화 목록 화면
+CLI7 동화 목록 아이템 항목
+'/
+hide footbox
+
+actor User as usr
+participant Client as cli
+participant Server as svr
+
+usr -> cli : 1. 동화 리스트 화면 진입
+activate cli
+cli -> cli : 2. 동화 리스트 캐시 조회
+cli --> usr : 3. 동화 리스트 보여주기
+
+
+cli -> svr : 4. 최신 동화 리스트 요청하기
+activate svr
+svr --> cli : 5. 동화 리스트 응답
+deactivate svr
+cli --> usr : 6. 동화 리스트 보여주기
+deactivate cli
+
+@enduml

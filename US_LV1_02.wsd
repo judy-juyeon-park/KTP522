@@ -1,0 +1,19 @@
+@startuml lv1_us02
+/'
+동화 내용 표시하기
+SVR2 동화 내용 제공
+CLI2 동화 내용 가져오기
+CLI9 동화 페이지 구성 화면
+'/
+hide footbox
+
+
+actor User as usr
+participant "동화읽기 서비스" as srv
+
+usr -> srv : 1. 동화 리스트에서 동화 선택하기
+activate srv
+srv -> srv : 2. 동화 내용 가져오기
+srv --> usr : 3. 동화 내용 화면 이동 \n 동화 내용 표시
+deactivate srv
+@enduml

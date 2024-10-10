@@ -1,0 +1,25 @@
+@startuml lv2_component
+
+skinparam componentStyle rectangle
+component Client{
+    component ModelC
+    component View
+    component ViewModel
+
+    ModelC <--> ViewModel
+    ViewModel <--> View
+}
+
+component Server{
+    component Controller
+    component ModelS
+    component Database
+
+    Controller <--> ModelS
+    ModelS <--> Database 
+}
+
+ModelC <--> Controller
+
+@enduml
+
