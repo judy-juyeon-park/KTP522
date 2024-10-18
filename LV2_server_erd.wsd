@@ -1,0 +1,20 @@
+@startuml
+entity tale {
+  * taleId
+  --
+  title
+  version
+  contents
+  createDate
+  updateDate
+}
+
+entity content {
+--
+page_number
+text 
+}
+
+tale <-- content
+
+@enduml

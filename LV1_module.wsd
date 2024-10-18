@@ -1,0 +1,23 @@
+@startuml
+
+package "Tales Voice" {
+    [Client] 
+    [Server]
+}
+
+component Client {
+   component "MClient" {
+}
+}
+
+component Server {
+   component "MServer" {
+}
+}
+
+component MTTSCloudService
+
+Client-->Server
+Client-->MTTSCloudService
+
+@enduml
