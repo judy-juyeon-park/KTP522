@@ -1,0 +1,24 @@
+@startuml seq_get_tale_tts
+
+participant TaleDetailActivity as view
+participant TaleDetailViewModel as vm
+participant TTSApiService as apiservice
+participant "TTS Cloud Service" as tts
+
+note over view : 동화 내용 화면 진입
+
+view -> vm : 동화 내용 음성 데이터로\n변경 요청
+vm -> apiservice : TTS 변경 요청
+group TTSAPI 실패 시 3회 Retry
+    apiservice -> tts : TTSAPI 호출
+    tts --> apiservice : 동화 내용 음성 데이터
+end
+alt TTS 성공
+    apiservice --> vm : 동화 내용 음성 데이터
+    vm --> view : 음성 데이터 실행
+else TTS 3회 초과 실패
+    apiservice -> vm : TTS 실패 알림
+    vm --> view : TTS 실패 알림
+end
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml seq_get_tale_content
+
+participant TaleDetailActivity as view2
+participant TaleListActivity as view
+participant TaleListViewModel as vm
+participant TaleRepository as repo
+participant TaleApiService as apiservice
+participant Router as router
+participant TaleController as tc
+database TaleServerDB as db_s
+
+note over view : 리스트에서 동화 선택
+
+view -> vm : 동화 내용 요청
+vm --> view : 로딩 화면 표시
+vm -> repo : 동화 내용 요청
+repo -> apiservice : 동화 내용 요청
+group TaleDetailAPI 실패 시 3회 Retry
+    apiservice -> router : TaleListAPI 호출
+    router -> tc : 동화 내용 조회
+    tc -> db_s : 동화 내용 조회
+    db_s --> tc : 동화 내용 데이터
+    tc --> router : 동화 내용 데이터
+    router --> apiservice : 동화 내용 데이터
+end
+alt 동화 내용 조회 성공
+    apiservice --> repo : 동화 내용 데이터
+    repo --> vm : 동화 내용 데이터
+    vm --> view : 동화 내용 데이터\n 내용 화면 전환 요청
+    view --> view2 : 화면 전환
+else 동화 내용 조회 3회 초과 실패
+    repo -> vm : 동화 내용 조회 실패 알림
+    vm --> view : 동화 내용 조회 실패 알림
+end
+
+@enduml

@@ -1,0 +1,38 @@
+@startuml seq_get_tale_list
+
+participant TaleListActivity as view
+participant TaleListViewModel as vm
+participant TaleRepository as repo
+database TaleClientDB as db_c
+participant TaleApiService as apiservice
+participant Router as router
+participant TaleController as tc
+database TaleServerDB as db_s
+
+note over view : 동화 리스트 화면 진입
+view -> vm : 동화 리스트 요청
+vm -> repo : 동화 리스트 요청
+repo -> db_c : 클라이언트 DB에서 \n 동화 리스트 데이터 가져오기
+db_c --> repo : 동화 리스트 데이터
+repo --> vm : 동화 리스트 데이터
+vm --> view : 저장된 동화 리스트\n화면 업데이트
+repo -> apiservice : 동화 리스트 요청
+group TaleListAPI 실패 시 3회 Retry
+    apiservice -> router : TaleListAPI 호출
+    router -> tc : 동화 리스트 조회
+    tc -> db_s : 동화 리스트 조회
+    db_s --> tc : 동화 리스트 데이터
+    tc --> router : 동화 리스트 데이터
+    router --> apiservice : 동화 리스트 데이터
+end
+alt 동화 리스트 조회 성공
+    apiservice --> repo : 동화 리스트 데이터
+    repo -> db_c : 동화 리스트 저장
+    repo --> vm : 동화 리스트 데이터
+    vm --> view : 최신 동화 리스트\n 화면 업데이트
+else 동화 리스트 조회 3회 초과 실패
+    repo -> vm : 동화 리스트 실패 알림
+    vm --> view : 동화 리스트 조회 실패 알림
+end
+
+@enduml
