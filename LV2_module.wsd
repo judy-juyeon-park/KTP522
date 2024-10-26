@@ -1,18 +1,19 @@
 @startuml lv2_module
+skinparam componentStyle rectangle
 
 node Client{
-    package ModelC {
-        component TaleRepository
-        component TaleApiService
-        component TTSApiService
+    package <<layer>>\nModelC {
+        component MTaleRepository as TaleRepository
+        component MTaleApiService as TaleApiService
+        component MTTSApiService as TTSApiService
     }
 
-    package ViewModel {
-        component TaleListViewModel
-        component TaleDetailViewModel
+    package <<layer>>\nViewModel {
+        component MTaleListViewModel as TaleListViewModel
+        component MTaleDetailViewModel as TaleDetailViewModel
     }
 
-    package View {
+    package <<layer>>\nView {
         component TaleListActivity
         component TaleDetailActivity
     }
@@ -24,39 +25,34 @@ node Client{
 
 node Server {
 
-    package Controller {
-        component Router
-        component TaleController
+    package <<layer>>\nController {
+        component MRouter as Router
+        component MTaleController as TaleController
     }
 
-    package ModelS {
-        component TaleModel
-    }
-
-    package Database {
-        component TaleDB
+    package <<layer>>\nModelS {
+        component MTaleModel as TaleModel
     }
 
     database TaleServerDB
 }
 
+Router ..> TaleController
+TaleController ..> TaleModel
+TaleModel ..> TaleServerDB
 
-Router --> TaleController
-TaleController <--> TaleModel
-TaleModel <--> TaleDB
+TaleRepository ..> TaleClientDB
+TaleRepository ..> TaleApiService
+TaleDetailViewModel ..> TTSApiService
 
-TaleRepository <--> TaleClientDB
-TaleRepository <--> TaleApiService
-TaleDetailViewModel <-->TTSApiService
+TaleListViewModel ..> TaleRepository
+TaleDetailViewModel ..> TaleRepository
 
-TaleListViewModel <--> TaleRepository
-TaleDetailViewModel <--> TaleRepository
+TaleListViewModel ..> TaleListActivity
+TaleDetailViewModel ..> TaleDetailActivity
 
-TaleListViewModel --> TaleListActivity
-TaleDetailViewModel --> TaleDetailActivity
-
-TaleApiService --> Router
-TaleController --> TaleApiService
+TaleApiService ..> Router
+TaleController ..> TaleApiService
 
 
 
