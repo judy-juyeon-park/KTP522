@@ -1,0 +1,19 @@
+@startuml
+left to right direction
+actor "User" as fc
+rectangle "동화 읽기 및 제어" {
+    usecase "다음 페이지 넘기기" as UC1
+    usecase "이전 페이지 돌아가기" as UC2
+    usecase "동화 내용 보기" as UC3
+    (UC1) .> (UC3) : include
+    (UC2) .> (UC3) : include
+    usecase "동화 읽기 일시정지 하기" as UC4
+    usecase "동화 읽기 재생(resume)하기" as UC5
+    usecase "동화 읽기 종료하기" as UC6
+}
+fc --> UC1
+fc --> UC2
+fc --> UC4
+fc --> UC5
+fc --> UC6
+@enduml

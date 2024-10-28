@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+actor "User" as fc
+rectangle "동화 목록 관리" {
+    usecase "동화 목록 보기" as UC1
+    usecase "동화 선택하기" as UC2
+    usecase "동화 내용 보기" as UC3
+    (UC2) .> (UC3) : include
+}
+fc --> UC1
+fc --> UC2
+@enduml
