@@ -1,23 +1,16 @@
-@startuml
+@startuml lv1_module
+skinparam componentStyle rectangle
 
-package "Tales Voice" {
-    [Client] 
-    [Server]
-}
-
-component Client {
-   component "MClient" {
-}
+node "Tales Voice" {
+    [MClient] 
+    [MServer]
 }
 
-component Server {
-   component "MServer" {
-}
-}
-
+component MClient 
+component MServer 
 component MTTSCloudService
 
-Client-->Server
-Client-->MTTSCloudService
+MClient ..> MServer
+MClient ..> MTTSCloudService
 
 @enduml

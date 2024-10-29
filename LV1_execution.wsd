@@ -1,12 +1,15 @@
-@startuml
+@startuml lv1_execution
+skinparam componentStyle rectangle
 
+component ETTSCloudService <<thirdparty>> 
 
-object EClient <<process>>
-object Eserver <<process>> 
-object ETTSCloudService <<thirdparty>> 
+node "Tales Voice" {
+    component EClient <<process>>
+    component EServer <<process>> 
+}
 
-EClient "0..*" --> "1..*" Eserver
-EClient "   0..*" --> "   1" ETTSCloudService
+EClient <--> EServer
+EClient <--> ETTSCloudService
 
 
 @enduml
