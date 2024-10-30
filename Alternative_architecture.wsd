@@ -1,0 +1,44 @@
+@startuml lv2_component
+
+node Client {
+
+    component TaleRepository
+    component TaleApiService
+    component TaleListViewModel
+    component TaleDetailViewModel
+
+    component TaleListView
+    component TaleDetailView
+
+    component ClientDB
+}
+
+node Server {
+
+    component Router
+    component TaleController
+    component TaleModel
+    component ServerDB
+    component TTSApiService
+}
+
+Router --> TaleController
+TaleController --> TaleModel
+TaleModel --> ServerDB
+TaleController --> TTSApiService : TTSInterface
+
+TaleRepository --> ClientDB
+TaleRepository --> TaleApiService : TaleListInterface, TaleDetailInterface
+
+TaleListViewModel --> TaleRepository
+TaleDetailViewModel --> TaleRepository
+
+TaleListViewModel --> TaleListView
+TaleDetailViewModel --> TaleDetailView
+
+TaleApiService --> Router
+TaleController --> TaleApiService
+
+TaleDetailViewModel --> Router : TTSRequest
+
+@enduml
