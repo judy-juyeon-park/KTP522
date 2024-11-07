@@ -19,26 +19,40 @@ node Server {
     component TaleController
     component TaleModel
     component ServerDB
-    component TTSApiService
 }
 
-Router --> TaleController
-TaleController --> TaleModel
-TaleModel --> ServerDB
-TaleController --> TTSApiService : TTSInterface
+node TTS3rdParty {
+    component TTSCloudService
+}
 
-TaleRepository --> ClientDB
-TaleRepository --> TaleApiService : TaleListInterface, TaleDetailInterface
+interface TaleListInterface
+interface TaleDetailInterface
+interface TTSInterface
+interface TTS3rdPartyInterface
 
-TaleListViewModel --> TaleRepository
-TaleDetailViewModel --> TaleRepository
+Router ..> TaleController
+TaleController ..> TaleModel
+TaleModel ..> ServerDB
 
-TaleListViewModel --> TaleListView
-TaleDetailViewModel --> TaleDetailView
 
-TaleApiService --> Router
-TaleController --> TaleApiService
+TaleRepository ..> ClientDB
+TaleRepository ..> TaleApiService
 
-TaleDetailViewModel --> Router : TTSRequest
+TaleListViewModel ..> TaleRepository
+TaleDetailViewModel ..> TaleRepository
+
+TaleListViewModel ..> TaleListView
+TaleDetailViewModel ..> TaleDetailView
+
+
+TTSInterface ..> Router : provided
+TaleListInterface ..> Router : provided
+TaleDetailInterface ..> Router : provided
+TaleApiService --> TaleListInterface : requires
+TaleApiService --> TaleDetailInterface : requires
+TaleApiService --> TTSInterface :requires
+
+TaleController --> TTS3rdPartyInterface : requires
+TTS3rdPartyInterface ..> TTSCloudService : provided
 
 @enduml
