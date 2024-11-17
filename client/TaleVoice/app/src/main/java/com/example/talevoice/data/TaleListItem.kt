@@ -1,7 +1,9 @@
 package com.example.talevoice.data
 
+import com.google.gson.annotations.SerializedName
+
 data class TaleListItem(
-    val taleId: String,
+    @SerializedName("id") val taleId: String,
     val title: String,
     val version: Int
 )
