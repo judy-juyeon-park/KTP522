@@ -11,5 +11,5 @@ interface TaleDao {
 
     @Transaction
     @Query("SELECT * FROM Tale")
-    suspend fun getTaleList(): LiveData<List<TaleListItem>>
+    suspend fun getTaleList(): List<TaleListItem>
 }
