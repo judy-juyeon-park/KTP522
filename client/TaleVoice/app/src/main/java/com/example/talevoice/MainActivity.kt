@@ -21,8 +21,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.example.talevoice.data.TaleItem
 import com.example.talevoice.ui.TaleContentScreen
 import com.example.talevoice.ui.TaleListScreen
+import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
 
@@ -33,6 +36,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+@Serializable
+object TaleList
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,17 +72,18 @@ fun MyApp(modifier: Modifier = Modifier) {
         content = { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = "tale_list",
+                startDestination = TaleList,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("tale_list") {
+                composable<TaleList> {
                     currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
                     TaleListScreen(navController, modifier = Modifier.fillMaxSize())
                 }
-                composable("tale_content") { backStackEntry ->
-                    currentScreenTitle.value = "Tale Content" // 화면에 따른 제목
+                composable<TaleItem> { backStackEntry ->
+                    val taleItem: TaleItem = backStackEntry.toRoute()
+                    currentScreenTitle.value = taleItem.title // 화면에 따른 제목
 //            val taleId = backStackEntry.arguments?.getString("taleId")
-                    TaleContentScreen(navController, modifier = Modifier.fillMaxSize())
+                    TaleContentScreen(taleItem, navController, modifier = Modifier.fillMaxSize())
                 }
             }
         }

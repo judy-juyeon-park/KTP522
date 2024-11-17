@@ -1,5 +1,6 @@
 package com.example.talevoice.ui
 
+import android.os.Bundle
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.talevoice.TaleApplication
+import com.example.talevoice.TaleList
 import com.example.talevoice.viewmodel.TaleListViewModel
 import com.example.talevoice.viewmodel.TaleListViewModelFactory
 import kotlinx.coroutines.launch
@@ -66,8 +68,8 @@ fun TaleListScreen(navController: NavHostController, modifier: Modifier) {
                                 try {
                                     val taleDetail = viewModel.getTaleDetail(tale.taleId)
                                     isLoading = false
-                                    navController.navigate("tale_content") {
-                                        popUpTo("tale_list")
+                                    navController.navigate(taleDetail) {
+                                        popUpTo<TaleList>()
                                     }
                                 } catch (e: Exception) {
                                     isLoading = false
