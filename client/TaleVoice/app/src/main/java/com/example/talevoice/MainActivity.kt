@@ -1,18 +1,27 @@
 package com.example.talevoice
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.talevoice.ui.talelist.TaleListFragment
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.example.talevoice.ui.TaleListScreen
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tale_list)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, TaleListFragment.newInstance())
-                .commitNow()
+        setContent {
+            MyApp(modifier = Modifier.fillMaxSize())
         }
+    }
+}
+
+@Composable
+fun MyApp(modifier: Modifier = Modifier) {
+    Surface {
+        TaleListScreen()
     }
 }

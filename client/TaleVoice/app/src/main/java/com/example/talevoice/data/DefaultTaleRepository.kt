@@ -1,10 +1,11 @@
 package com.example.talevoice.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.example.talevoice.data.source.local.TaleDao
 import com.example.talevoice.data.source.server.TaleApiService
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 class DefaultTaleRepository (
@@ -12,19 +13,22 @@ class DefaultTaleRepository (
     private val networkApiService: TaleApiService,
     private val dispatcher: CoroutineDispatcher,
 ) : TaleRepository{
-    override fun getTaleList(): LiveData<List<TaleListItem>> {
-        return liveData(dispatcher) {
+    override fun getTaleList(): Flow<List<TaleListItem>> = flow {
+        try {
             val taleList = localDataSource.getTaleList()
             emit(taleList)
-
             val response = networkApiService.getTaleList()
             if (response.isSuccessful){
                 response.body()?.data?.let {
                     emit(it)
                 }
+            } else {
+                throw Exception("Network request failed: ${response.errorBody()?.string()}")
             }
+        } catch (e: Exception) {
+            emit(emptyList<TaleListItem>())
         }
-    }
+    }.flowOn(dispatcher)
 
     override suspend fun getTaleItem(taleId: String) : TaleItem{
         return withContext(dispatcher){

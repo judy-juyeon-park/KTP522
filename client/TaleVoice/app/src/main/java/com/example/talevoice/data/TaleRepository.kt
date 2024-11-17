@@ -1,9 +1,9 @@
 package com.example.talevoice.data
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 
 interface TaleRepository {
 
-    fun getTaleList() : LiveData<List<TaleListItem>>
+    fun getTaleList() : Flow<List<TaleListItem>>
     suspend fun getTaleItem(taleId: String) : TaleItem
 }
