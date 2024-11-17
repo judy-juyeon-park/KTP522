@@ -103,7 +103,6 @@ fun MyApp(modifier: Modifier = Modifier) {
                     canNavigateBack.value = true
                     val taleItem: TaleItem = backStackEntry.toRoute()
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
-//            val taleId = backStackEntry.arguments?.getString("taleId")
                     TaleContentScreen(taleItem, navController, modifier = Modifier.fillMaxSize())
                 }
             }
