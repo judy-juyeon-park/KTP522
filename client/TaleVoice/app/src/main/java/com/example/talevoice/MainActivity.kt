@@ -1,11 +1,16 @@
 package com.example.talevoice
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -18,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -50,7 +56,8 @@ fun MyApp(modifier: Modifier = Modifier) {
     // 현재 경로에 따른 제목 결정
     val currentScreenTitle = remember { mutableStateOf("Tale List") }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-
+    val canNavigateBack = remember { mutableStateOf(false)}
+    Log.d("MyAPp", "update!!!")
     Scaffold(
         topBar = {
             LargeTopAppBar(
@@ -63,8 +70,20 @@ fun MyApp(modifier: Modifier = Modifier) {
                         currentScreenTitle.value,
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.SemiBold,
-                        style = MaterialTheme.typography.displayMedium
+                        fontSize = if (currentScreenTitle.value.length > 10) 30.sp else 45.sp,
                     )
+                },
+                navigationIcon = {
+                    if (canNavigateBack.value){
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Localized description"
+                            )
+                        }
+                    }
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -76,10 +95,12 @@ fun MyApp(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable<TaleList> {
+                    canNavigateBack.value = false
                     currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
                     TaleListScreen(navController, modifier = Modifier.fillMaxSize())
                 }
                 composable<TaleItem> { backStackEntry ->
+                    canNavigateBack.value = true
                     val taleItem: TaleItem = backStackEntry.toRoute()
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
 //            val taleId = backStackEntry.arguments?.getString("taleId")
