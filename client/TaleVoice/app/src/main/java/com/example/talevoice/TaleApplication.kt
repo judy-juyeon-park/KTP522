@@ -5,13 +5,11 @@ import android.util.Log
 import androidx.room.Room
 import com.example.talevoice.data.DefaultTaleRepository
 import com.example.talevoice.data.TaleRepository
-import com.example.talevoice.data.source.local.TaleDao
 import com.example.talevoice.data.source.local.TaleDatabase
 import com.example.talevoice.data.source.server.TaleApiService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import okhttp3.mockwebserver.Dispatcher

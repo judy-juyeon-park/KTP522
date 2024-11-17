@@ -3,7 +3,6 @@ package com.example.talevoice.ui.talelist
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import com.example.talevoice.TaleApplication
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.data.TaleListItem
