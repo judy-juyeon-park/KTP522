@@ -25,7 +25,7 @@ fun TaleListScreen(){
 
     LaunchedEffect(Unit) {
         try {
-            val detail = viewModel.getTaleDetail("1")
+            val detail = viewModel.getTaleDetail("6738f9a86107590ff665e195")
             Log.d("TaleListScreen", detail.toString())
         } catch (e: Exception) {
             println("Failed to fetch tale detail: ${e.message}")

@@ -61,7 +61,6 @@ dependencies {
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     implementation(libs.retrofit)
-    implementation(libs.mockwebserver)
     implementation(libs.converter.gson)
     implementation(libs.androidx.room.runtime)
     testImplementation(libs.junit)
