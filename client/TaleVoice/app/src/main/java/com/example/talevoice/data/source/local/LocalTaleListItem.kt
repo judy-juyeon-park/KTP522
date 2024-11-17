@@ -10,4 +10,5 @@ data class LocalTaleListItem(
     @PrimaryKey val taleId: String,
     val title: String,
     val createAt: Date,
+    val modifiedAt: Date,
 )
