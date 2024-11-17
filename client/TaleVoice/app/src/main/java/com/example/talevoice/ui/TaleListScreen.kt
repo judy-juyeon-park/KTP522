@@ -3,8 +3,10 @@ package com.example.talevoice.ui
 import android.os.Bundle
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -47,12 +49,17 @@ fun TaleListScreen(navController: NavHostController, modifier: Modifier) {
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .height(4.dp)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(4.dp)
             )
         }
         LazyColumn {
             itemsIndexed(taleList) { index, tale ->
-                Log.d("TaleListScreen", tale.title)
-                Log.d("TaleListScreen", tale.taleId)
                 Text(text = tale.title,
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.Thin,
@@ -60,7 +67,7 @@ fun TaleListScreen(navController: NavHostController, modifier: Modifier) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            if (isLoading){
+                            if (isLoading) {
                                 return@clickable
                             }
                             isLoading = true
