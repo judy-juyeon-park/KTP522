@@ -209,7 +209,7 @@ router.get('/list', async(req, res, next)=>{
             code: 200,
             message: "동화 리스트를 조회했습니다.",
             data: data,
-            totla: data.length
+            total: data.length
         })
         return;
 
