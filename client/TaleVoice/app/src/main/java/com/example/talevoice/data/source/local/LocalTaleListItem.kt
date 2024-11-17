@@ -9,6 +9,5 @@ import java.util.Date
 data class LocalTaleListItem(
     @PrimaryKey val taleId: String,
     val title: String,
-    val createAt: Date,
-    val modifiedAt: Date,
+    val version: Int
 )

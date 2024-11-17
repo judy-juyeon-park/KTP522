@@ -67,24 +67,7 @@ class TaleApplication : Application() {
                         "/api/tales/list" -> MockResponse()
                             .setResponseCode(200)
                             .setBody("""
-                                {
-  "status": "success",
-  "data": [
-    {
-      "taleId": "1",
-      "title": "The Brave Little Tailor",
-      "createAt": "2024-11-01T10:00:00Z",
-      "modifiedAt": "2024-11-05T15:30:00Z"
-    },
-    {
-      "taleId": "2",
-      "title": "The Frog Prince",
-      "createAt": "2024-10-28T08:45:00Z",
-      "modifiedAt": "2024-11-04T11:20:00Z"
-    }
-  ],
-  "total": 2
-}
+{"code":200,"message":"동화 리스트를 조회했습니다.","data":[{"id":"6738f9a86107590ff665e195","title":"라푼젤","version":1},{"id":"6738fa3c6107590ff665e198","title":"백설공주","version":1},{"id":"6738fabf6107590ff665e19b","title":"콩쥐 팥쥐","version":1},{"id":"6738fb086107590ff665e19e","title":"아기 돼지 3형제","version":1},{"id":"6738fb496107590ff665e1a1","title":"이상한 나라의 엘리스","version":1},{"id":"6738fba76107590ff665e1a4","title":"성냥팔이 소녀","version":1},{"id":"6738fbe26107590ff665e1a7","title":"토끼와 거북이","version":1},{"id":"6738fc176107590ff665e1ab","title":"여우와 두루미","version":1},{"id":"6738fc486107590ff665e1ae","title":"신데렐라","version":1}],"totla":9}
                             """.trimIndent())
                         "/api/tales/content/1" -> MockResponse()
                             .setResponseCode(200)
