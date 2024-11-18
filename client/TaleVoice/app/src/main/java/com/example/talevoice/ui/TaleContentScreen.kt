@@ -21,12 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.talevoice.data.TaleItem
+import coil3.compose.AsyncImage
+import com.example.talevoice.R
 
 @Composable
 fun TaleContentScreen(taleItem: TaleItem, navController: NavHostController, modifier: Modifier) {
@@ -50,12 +53,20 @@ fun TaleContentScreen(taleItem: TaleItem, navController: NavHostController, modi
                 Column {
                     Box(
                         Modifier
-                            .fillMaxWidth(0.5f)
+                            .fillMaxWidth(0.6f)
                             .aspectRatio(1.0f)
                             .padding(15.dp)
                             .align(Alignment.CenterHorizontally)
-                            .background(Color.LightGray)
-                    )
+                    ) {
+                        AsyncImage(
+                            model = taleItem.image[page],
+                            contentDescription = "Image",
+                            error = painterResource(R.drawable.placeholder),
+                            placeholder = painterResource(R.drawable.placeholder),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                    }
                     Box(Modifier.fillMaxWidth(0.9f)) {
                         Text(
                             text = taleItem.context[page],
