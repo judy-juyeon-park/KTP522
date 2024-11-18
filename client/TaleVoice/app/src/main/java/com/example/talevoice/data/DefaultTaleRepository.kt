@@ -19,12 +19,16 @@ class DefaultTaleRepository (
             emit(taleList)
             val response = networkApiService.getTaleList()
             if (response.isSuccessful){
-                response.body()?.data?.let {
-                    emit(it)
+                val taleListFromNetwork = response.body()?.data
+                if (taleListFromNetwork != null){
+                    emit(taleListFromNetwork)
                 }
             } else {
                 throw Exception("Network request failed: ${response.errorBody()?.string()}")
             }
+
+            // TODO("Implement Upsert")
+
         } catch (e: Exception) {
             emit(emptyList<TaleListItem>())
         }
