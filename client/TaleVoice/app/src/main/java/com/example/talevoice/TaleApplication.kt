@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.example.talevoice.data.DefaultTaleRepository
 import com.example.talevoice.data.TaleRepository
 import com.example.talevoice.data.source.local.TaleDatabase
+import com.example.talevoice.data.source.server.TTSApiService
 import com.example.talevoice.data.source.server.TaleApiService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +32,9 @@ class TaleApplication : Application() {
     lateinit var taleRepository: TaleRepository
         private set
 
+    lateinit var  ttsApiService: TTSApiService
+        private set
+
     override fun onCreate() {
         super.onCreate()
         Log.d("TaleApplication","tale application on create")
@@ -48,6 +52,12 @@ class TaleApplication : Application() {
                 networkApiService = apiService,
                 dispatcher = Dispatchers.IO
             )
+
+            // TODO ("Implement ttsApiService")
+            ttsApiService = Retrofit.Builder()
+                .baseUrl("http://20.41.121.42:3000/")
+                .build()
+                .create(TTSApiService::class.java)
         }
 
     }
