@@ -1,5 +1,6 @@
 package com.example.talevoice.ui
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.talevoice.TaleApplication
 import com.example.talevoice.TaleList
+import com.example.talevoice.data.TaleItem
 import com.example.talevoice.viewmodel.TaleListViewModel
 import com.example.talevoice.viewmodel.TaleListViewModelFactory
 import kotlinx.coroutines.launch
@@ -72,10 +74,30 @@ fun TaleListScreen(navController: NavHostController, modifier: Modifier) {
                             viewModel.viewModelScope.launch {
                                 try {
                                     val taleDetail = viewModel.getTaleDetail(tale.taleId)
+                                    Log.d("TaleListScreen", tale.taleId)
                                     isLoading = false
-                                    navController.navigate(taleDetail) {
-                                        popUpTo<TaleList>()
+                                    if (tale.taleId.contentEquals("6738f9a86107590ff665e195")) {
+                                        val newTaleDetail = TaleItem(
+                                            taleDetail.title,
+                                            taleDetail.context,
+                                            listOf(
+                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel1.webp",
+                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel2.webp",
+                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel3.webp",
+                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel4.webp",
+                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel5.webp"
+                                            )
+                                        )
+                                        navController.navigate(newTaleDetail) {
+                                            popUpTo<TaleList>()
+                                        }
+                                    } else {
+                                        navController.navigate(taleDetail) {
+                                            popUpTo<TaleList>()
+                                        }
                                     }
+
+
                                 } catch (e: Exception) {
                                     isLoading = false
                                     println("Error fetching tale details: ${e.message}")
