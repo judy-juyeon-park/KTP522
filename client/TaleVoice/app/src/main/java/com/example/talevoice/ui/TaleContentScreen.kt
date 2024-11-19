@@ -1,5 +1,6 @@
 package com.example.talevoice.ui
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,33 +23,42 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavHostController
-import com.example.talevoice.data.TaleItem
 import coil3.compose.AsyncImage
 import com.example.talevoice.R
 import com.example.talevoice.TaleApplication
+import com.example.talevoice.data.TaleItem
 import com.example.talevoice.viewmodel.TaleDetailViewModel
 import com.example.talevoice.viewmodel.TaleDetailViewModelFactory
+
 
 @Composable
 fun TaleContentScreen(taleItem: TaleItem, navController: NavHostController, modifier: Modifier) {
     Log.d("TaleContentScreen", taleItem.toString())
 
-    // TODO("Impl TTS")
     val ttsApiService = (LocalContext.current.applicationContext as TaleApplication).ttsApiService
     val viewModel: TaleDetailViewModel = viewModel(
         factory = TaleDetailViewModelFactory(ttsApiService, taleItem)
@@ -56,15 +66,42 @@ fun TaleContentScreen(taleItem: TaleItem, navController: NavHostController, modi
 
     val pageResults by viewModel.pageResults.collectAsState()
 
+    val context = LocalContext.current
+    val exoPlayer = remember {
+        ExoPlayer.Builder(context).build()
+    }
+    var isPlayingAudio by remember {
+        mutableStateOf(false)
+    }
+
     LaunchedEffect(Unit) {
         Log.d("TaleContentScreen", "launchEffect on TaleContentScreen")
         viewModel.cleatData()
-        viewModel.fetchSpeech()
+        viewModel.fetchSpeech(context.applicationContext)
     }
+
+    DisposableEffect(Unit) {
+        val listener = object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                isPlayingAudio = isPlaying
+            }
+        }
+        exoPlayer.addListener(listener)
+
+        onDispose {
+            exoPlayer.removeListener(listener)
+            exoPlayer.release()
+        }
+    }
+
 
     val pagerState = rememberPagerState(pageCount = {
         taleItem.context.size
     })
+
+    LaunchedEffect(pagerState.currentPage) {
+        exoPlayer.stop()
+    }
 
     Box(Modifier.fillMaxSize()) {
 
@@ -130,13 +167,35 @@ fun TaleContentScreen(taleItem: TaleItem, navController: NavHostController, modi
         }
 
         FloatingActionButton(
-            onClick = { },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+            onClick = {
+                val currentPage = pagerState.currentPage
+                val audioUri = pageResults[currentPage]
+                if (audioUri != null) {
+                    if (isPlayingAudio) {
+                        exoPlayer.stop()
+                        exoPlayer.clearMediaItems()
+                    } else {
+                        val mediaItem = MediaItem.fromUri(audioUri)
+                        exoPlayer.setMediaItem(mediaItem)
+                        exoPlayer.prepare()
+                        exoPlayer.play()
+                    }
+                }
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp)
         ) {
             val currentPage = pagerState.currentPage
             val audioData = pageResults[currentPage]
             if (audioData != null) {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Play")
+                if (isPlayingAudio) {
+                    val stopIcon = ImageVector.vectorResource(id = R.drawable.baseline_stop_24)
+                    Icon(stopIcon, contentDescription = "Stop")
+                } else {
+                    Icon(Icons.Default.PlayArrow, contentDescription = "Play")
+                }
+
             } else {
                 CircularProgressIndicator(
                     color = Color.White,
