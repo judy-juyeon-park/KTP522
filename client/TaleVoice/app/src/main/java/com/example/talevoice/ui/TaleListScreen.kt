@@ -35,7 +35,7 @@ import com.example.talevoice.viewmodel.TaleListViewModelFactory
 import kotlinx.coroutines.launch
 
 @Composable
-fun TaleListScreen(navController: NavHostController, modifier: Modifier) {
+fun TaleListScreen(navController: NavHostController) {
     val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
     val viewModel: TaleListViewModel = viewModel(
         factory = TaleListViewModelFactory(repository)

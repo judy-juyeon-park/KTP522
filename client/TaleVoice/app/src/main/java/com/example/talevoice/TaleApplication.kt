@@ -13,8 +13,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
 class TaleApplication : Application() {
 
@@ -40,8 +43,19 @@ class TaleApplication : Application() {
         Log.d("TaleApplication","tale application on create")
 
         appScope.launch(appDispatcher) {
+
+            val loggingInterceptor = HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
+
+            val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .build()
+
+
             val apiService: TaleApiService = Retrofit.Builder()
                 .baseUrl("http://20.41.121.42:3000/")
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(TaleApiService::class.java)
@@ -55,7 +69,9 @@ class TaleApplication : Application() {
 
             // TODO ("Implement ttsApiService")
             ttsApiService = Retrofit.Builder()
-                .baseUrl("http://20.41.121.42:3000/")
+                .baseUrl("https://koreacentral.tts.speech.microsoft.com")
+                .client(okHttpClient)
+                .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build()
                 .create(TTSApiService::class.java)
         }

@@ -1,9 +1,20 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+}
+
+val localProperties = File(rootDir, "local.properties")
+val azureTTSApiKey: String? = if (localProperties.exists()) {
+    val properties = Properties()
+    properties.load(localProperties.inputStream())
+    properties.getProperty("AZURE_TTS_API_KEY") // API_KEY 값을 가져옴
+} else {
+    null // local.properties 파일이 없으면 null 처리
 }
 
 android {
@@ -18,10 +29,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "AZURE_TTS_API_KEY", "\"${azureTTSApiKey}\"")
     }
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     buildTypes {
@@ -45,6 +58,7 @@ android {
 dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.media3.exoplayer)
     val composeBom = platform("androidx.compose:compose-bom:2024.10.01")
     implementation(composeBom)
     implementation(libs.androidx.material3)
@@ -67,7 +81,10 @@ dependencies {
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
     implementation(libs.retrofit)
+    implementation(libs.okhttp.logging)
     implementation(libs.converter.gson)
+    implementation(libs.converter.xml)
+
     implementation(libs.androidx.room.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
