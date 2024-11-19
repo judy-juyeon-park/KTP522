@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -38,7 +37,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApp(modifier = Modifier.fillMaxSize())
+            MyApp()
         }
     }
 }
@@ -49,7 +48,7 @@ object TaleList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp(modifier: Modifier = Modifier) {
+fun MyApp() {
 
     val navController = rememberNavController()
 
@@ -97,13 +96,13 @@ fun MyApp(modifier: Modifier = Modifier) {
                 composable<TaleList> {
                     canNavigateBack.value = false
                     currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
-                    TaleListScreen(navController, modifier = Modifier.fillMaxSize())
+                    TaleListScreen(navController)
                 }
                 composable<TaleItem> { backStackEntry ->
                     canNavigateBack.value = true
                     val taleItem: TaleItem = backStackEntry.toRoute()
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
-                    TaleContentScreen(taleItem, navController, modifier = Modifier.fillMaxSize())
+                    TaleContentScreen(taleItem)
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.example.talevoice.ui
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -46,7 +45,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.example.talevoice.R
 import com.example.talevoice.TaleApplication
@@ -56,7 +54,7 @@ import com.example.talevoice.viewmodel.TaleDetailViewModelFactory
 
 
 @Composable
-fun TaleContentScreen(taleItem: TaleItem, navController: NavHostController, modifier: Modifier) {
+fun TaleContentScreen(taleItem: TaleItem) {
     Log.d("TaleContentScreen", taleItem.toString())
 
     val ttsApiService = (LocalContext.current.applicationContext as TaleApplication).ttsApiService
@@ -73,6 +71,10 @@ fun TaleContentScreen(taleItem: TaleItem, navController: NavHostController, modi
     var isPlayingAudio by remember {
         mutableStateOf(false)
     }
+
+    val pagerState = rememberPagerState(pageCount = {
+        taleItem.context.size
+    })
 
     LaunchedEffect(Unit) {
         Log.d("TaleContentScreen", "launchEffect on TaleContentScreen")
@@ -93,11 +95,6 @@ fun TaleContentScreen(taleItem: TaleItem, navController: NavHostController, modi
             exoPlayer.release()
         }
     }
-
-
-    val pagerState = rememberPagerState(pageCount = {
-        taleItem.context.size
-    })
 
     LaunchedEffect(pagerState.currentPage) {
         exoPlayer.stop()
