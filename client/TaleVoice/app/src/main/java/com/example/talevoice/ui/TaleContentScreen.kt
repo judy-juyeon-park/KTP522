@@ -181,7 +181,7 @@ fun TaleContentScreen(taleItem: TaleItem) {
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp)
+                .padding(24.dp)
         ) {
             val currentPage = pagerState.currentPage
             val audioData = pageResults[currentPage]
