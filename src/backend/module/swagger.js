@@ -1,3 +1,4 @@
+// AS6. 표준화된 API 응답 구조 설계 (JSON, XML 등) 
 const swaggerUi = require("swagger-ui-express")
 const swaggereJsdoc = require("swagger-jsdoc")
 

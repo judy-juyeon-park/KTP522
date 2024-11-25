@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
 
+// AS2. NOSQL 적용
+// AS4. 효율적인 데이터베이스 추출 SQL 설계 - Mongoose ORM 적용
 //mongoose
 var mongoose = require('mongoose');
 const mongooseConfig = require("../config/mongoDB.json");

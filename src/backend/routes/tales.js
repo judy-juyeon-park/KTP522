@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var tale = require('../model/tale');
 
+// AS13. 비동기 처리 방식을 사용한다. 
+
 /* Create tale */
 router.post('/', async(req, res, next)=>{
     try{
