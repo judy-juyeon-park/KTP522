@@ -17,6 +17,14 @@ val azureTTSApiKey: String? = if (localProperties.exists()) {
     null // local.properties 파일이 없으면 null 처리
 }
 
+val wasURL: String? = if (localProperties.exists()) {
+    val properties = Properties()
+    properties.load(localProperties.inputStream())
+    properties.getProperty("WAS_URL") // API_KEY 값을 가져옴
+} else {
+    null // local.properties 파일이 없으면 null 처리
+}
+
 android {
     namespace = "com.example.talevoice"
     compileSdk = 34
@@ -30,6 +38,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "AZURE_TTS_API_KEY", "\"${azureTTSApiKey}\"")
+        buildConfigField("String", "WAS_URL", "\"${wasURL}\"")
     }
 
     buildFeatures {

@@ -54,7 +54,7 @@ class TaleApplication : Application() {
 
 
             val apiService: TaleApiService = Retrofit.Builder()
-                .baseUrl("http://20.41.121.42:3000/")
+                .baseUrl(BuildConfig.WAS_URL)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
