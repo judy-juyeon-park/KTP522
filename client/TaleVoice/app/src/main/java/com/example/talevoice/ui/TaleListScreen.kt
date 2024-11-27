@@ -29,7 +29,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.talevoice.TaleApplication
 import com.example.talevoice.TaleList
-import com.example.talevoice.data.TaleItem
 import com.example.talevoice.viewmodel.TaleListViewModel
 import com.example.talevoice.viewmodel.TaleListViewModelFactory
 import kotlinx.coroutines.launch
