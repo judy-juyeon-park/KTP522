@@ -67,7 +67,6 @@ class TaleApplication : Application() {
                 dispatcher = Dispatchers.IO
             )
 
-            // TODO ("Implement ttsApiService")
             ttsApiService = Retrofit.Builder()
                 .baseUrl("https://koreacentral.tts.speech.microsoft.com")
                 .client(okHttpClient)

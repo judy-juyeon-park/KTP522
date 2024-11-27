@@ -76,28 +76,9 @@ fun TaleListScreen(navController: NavHostController) {
                                     val taleDetail = viewModel.getTaleDetail(tale.taleId)
                                     Log.d("TaleListScreen", tale.taleId)
                                     isLoading = false
-                                    if (tale.taleId.contentEquals("6738f9a86107590ff665e195")) {
-                                        val newTaleDetail = TaleItem(
-                                            taleDetail.title,
-                                            taleDetail.context,
-                                            listOf(
-                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel1.webp",
-                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel2.webp",
-                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel3.webp",
-                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel4.webp",
-                                                "https://raw.githubusercontent.com/joseph-jingi-jung/KTP522/refs/heads/main/lapunzel5.webp"
-                                            )
-                                        )
-                                        navController.navigate(newTaleDetail) {
-                                            popUpTo<TaleList>()
-                                        }
-                                    } else {
-                                        navController.navigate(taleDetail) {
-                                            popUpTo<TaleList>()
-                                        }
+                                    navController.navigate(taleDetail) {
+                                        popUpTo<TaleList>()
                                     }
-
-
                                 } catch (e: Exception) {
                                     isLoading = false
                                     println("Error fetching tale details: ${e.message}")
