@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.example.talevoice.data.DefaultTaleRepository
 import com.example.talevoice.data.TaleRepository
 import com.example.talevoice.data.source.local.TaleDatabase
+import com.example.talevoice.data.source.server.RetryInterceptor
 import com.example.talevoice.data.source.server.TTSApiService
 import com.example.talevoice.data.source.server.TaleApiService
 import kotlinx.coroutines.CoroutineDispatcher
@@ -50,8 +51,8 @@ class TaleApplication : Application() {
 
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
+                .addInterceptor(RetryInterceptor(3))
                 .build()
-
 
             val apiService: TaleApiService = Retrofit.Builder()
                 .baseUrl(BuildConfig.WAS_URL)
