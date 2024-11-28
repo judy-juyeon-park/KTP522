@@ -278,35 +278,28 @@ router.get('/list', async(req, res, next)=>{
 /* GET tales content */
 router.get('/content/:id', async (req, res, next)=>{
     try{
-        const reqID = req.params.id;
-        if(!reqID ){ 
-            res.json({
-                code : 400,
-                message: "동화 id를 입력하세요."
-            });
-        return;
-        }   
-
-        const result = await tale.findOne({_id:reqID})
-        if(!result){
+        try{
+            const reqID = req.params.id;
+            const result = await tale.findOne({_id:reqID})
+        }catch(result){
             res.json({
                 code : 400,
                 message: "올바른 동화 id를 입력하세요."
             })
             return;
-        }else{
-            res.json({
-                code: 200,
-                message: "동화 내용을 조회했습니다.",
-                data: {
-                    title: result.title,
-                    version: result.version,
-                    context: result.context,
-                    image: result.image
-                }
-            })
-            return;
         }
+  
+        res.json({
+            code: 200,
+            message: "동화 내용을 조회했습니다.",
+            data: {
+                title: result.title,
+                version: result.version,
+                context: result.context,
+                image: result.image
+            }
+        })
+        return;
 
     }catch (err) { 
         if(err){
