@@ -280,27 +280,26 @@ router.get('/content/:id', async (req, res, next)=>{
     try{
         try{
             const reqID = req.params.id;
-            const result = await tale.findOne({_id:reqID})
-        }catch(result){
+            const result = await tale.findOne({_id:reqID});
+            res.json({
+                code: 200,
+                message: "동화 내용을 조회했습니다.",
+                data: {
+                    title: result.title,
+                    version: result.version,
+                    context: result.context,
+                    image: result.image
+                }
+            })
+            return;
+        }catch(err){
             res.json({
                 code : 400,
                 message: "올바른 동화 id를 입력하세요."
             })
             return;
         }
-  
-        res.json({
-            code: 200,
-            message: "동화 내용을 조회했습니다.",
-            data: {
-                title: result.title,
-                version: result.version,
-                context: result.context,
-                image: result.image
-            }
-        })
-        return;
-
+        
     }catch (err) { 
         if(err){
             console.log(err);
