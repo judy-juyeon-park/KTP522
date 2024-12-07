@@ -100,10 +100,17 @@ fun MyApp() {
                     currentScreenTitle.value = "TaleVoice" // 화면에 따른 제목
                     TaleInputScreen(navController)
                 }
-                composable<TaleList> {
+                /* composable<TaleList> {
                     canNavigateBack.value = true
                     currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
                     TaleListScreen(navController)
+                }*/
+                composable("TaleList/{name}/{gender}") { backStackEntry ->
+                    canNavigateBack.value = true
+                    val name = backStackEntry.arguments?.getString("name")
+                    val gender = backStackEntry.arguments?.getString("gender")
+                    currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
+                    TaleListScreen(navController, name, gender)
                 }
                 composable<TaleItem> { backStackEntry ->
                     canNavigateBack.value = true

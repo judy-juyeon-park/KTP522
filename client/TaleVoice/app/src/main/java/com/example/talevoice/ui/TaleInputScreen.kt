@@ -23,7 +23,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -124,8 +123,9 @@ fun TaleInputScreen(navController: NavHostController) {
             // 저장 버튼
             Button(
                 onClick = {
-                    // 저장 로직 추가
-                    navController.navigate(TaleList)
+                    val name= userName.ifEmpty { "Unknown" }
+                    val gender = selectedGender ?: "Unknown"
+                    navController.navigate("TaleList/$name/$gender")
                 },
                 shape = RoundedCornerShape(0.dp),
                 modifier = Modifier.fillMaxWidth()

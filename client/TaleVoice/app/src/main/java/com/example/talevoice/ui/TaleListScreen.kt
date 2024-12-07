@@ -35,7 +35,7 @@ import com.example.talevoice.viewmodel.TaleListViewModelFactory
 import kotlinx.coroutines.launch
 
 @Composable
-fun TaleListScreen(navController: NavHostController) {
+fun TaleListScreen(navController: NavHostController, userName: String?, gender: String?) {
     val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
     val viewModel: TaleListViewModel = viewModel(
         factory = TaleListViewModelFactory(repository)
@@ -51,7 +51,7 @@ fun TaleListScreen(navController: NavHostController) {
                 .padding(16.dp)
         ) {
             Text(
-                text = "안녕, {사용자}",
+                text = "안녕, ${userName}",
                 style = MaterialTheme.typography.headlineMedium,
                 fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Thin,
