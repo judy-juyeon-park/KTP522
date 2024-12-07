@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +45,34 @@ fun TaleListScreen(navController: NavHostController) {
     var isLoading by remember { mutableStateOf(false) }
 
     Column {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "안녕, {사용자}",
+                style = MaterialTheme.typography.headlineMedium,
+                fontFamily = FontFamily.Serif,
+                fontWeight = FontWeight.Thin,
+                modifier = Modifier.padding(16.dp)
+            )
+
+            Button(
+                onClick = {
+                    navController.navigate("TaleCreationScreen")
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "나만의 동화 생성",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Thin
+                )
+            }
+        }
+
         if (isLoading) {
             LinearProgressIndicator(
                 modifier = Modifier

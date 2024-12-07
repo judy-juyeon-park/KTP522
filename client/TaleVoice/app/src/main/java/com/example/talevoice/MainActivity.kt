@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.ui.TaleContentScreen
+import com.example.talevoice.ui.TaleCreationScreen
 import com.example.talevoice.ui.TaleListScreen
 import kotlinx.serialization.Serializable
 
@@ -103,6 +104,11 @@ fun MyApp() {
                     val taleItem: TaleItem = backStackEntry.toRoute()
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
                     TaleContentScreen(taleItem)
+                }
+                composable("TaleCreationScreen") {
+                    canNavigateBack.value = true
+                    currentScreenTitle.value = "새로운 동화 생성"
+                    TaleCreationScreen(navController)
                 }
             }
         }
