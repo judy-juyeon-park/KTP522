@@ -30,6 +30,7 @@ import androidx.navigation.toRoute
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.ui.TaleContentScreen
 import com.example.talevoice.ui.TaleCreationScreen
+import com.example.talevoice.ui.TaleInputScreen
 import com.example.talevoice.ui.TaleListScreen
 import kotlinx.serialization.Serializable
 
@@ -91,11 +92,16 @@ fun MyApp() {
         content = { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = TaleList,
+                startDestination = "TaleInputScreen",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable<TaleList> {
+                composable("TaleInputScreen") {
                     canNavigateBack.value = false
+                    currentScreenTitle.value = "TaleVoice" // 화면에 따른 제목
+                    TaleInputScreen(navController)
+                }
+                composable<TaleList> {
+                    canNavigateBack.value = true
                     currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
                     TaleListScreen(navController)
                 }
