@@ -37,7 +37,11 @@ node ChatGPT3rfParty {
 
 interface TaleListInterface
 interface TaleDetailInterface
+interface TaleLogInterface
 interface TTSInterface
+
+interface GenerateStoryInterface
+interface GenerateIllustInterface
 
 
 Router ..> TaleController
@@ -48,8 +52,10 @@ Router ..> TaleAIController
 TaleAIController ..> TaleLogModel
 TaleLogModel ..> ServerDB
 
-TaleAIController --> ChatGPTInterface : requires
-ChatGPTInterface ..> ChatGPTAPIService : provided
+TaleAIController --> GenerateStoryInterface : requires
+TaleAIController --> GenerateIllustInterface : requires
+GenerateStoryInterface ..> ChatGPTAPIService : provided
+GenerateIllustInterface ..> ChatGPTAPIService : provided
 
 TaleRepository ..> ClientDB
 TaleRepository ..> TaleApiService
@@ -67,9 +73,10 @@ TTSApiService --> TTSInterface : requires
 
 TaleListInterface ..> Router : provided
 TaleDetailInterface ..> Router : provided
+TaleLogInterface ..> Router : provided
 TaleApiService --> TaleListInterface : requires
 TaleApiService --> TaleDetailInterface : requires
-
+TaleApiService --> TaleLogInterface : requires
 
 
 @enduml
