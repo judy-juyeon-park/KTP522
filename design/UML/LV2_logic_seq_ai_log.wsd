@@ -1,8 +1,8 @@
 @startuml seq_get_tale_list
 
 actor User as user
-participant UserInfoView as view
-participant UserInfoViewModel as vm
+participant TaleDetailView as view
+participant TaleDetailViewModel as vm
 participant TaleRepository as repo
 participant TaleApiService as api
 participant Router as router
