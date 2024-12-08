@@ -2,10 +2,12 @@
 
 actor User as user
 participant UserInfoView as view
+participant TaleListView as view2
 participant UserInfoViewModel as vm
 participant TaleRepository as repo
 participant ClientDB as db_c
 
+alt 저장된 사용자 정보 없는 경우
 user -> view : 사용자 정보 입력 화면 진입
 view --> user : 필요한 사용자 정보 요청 화면 표시
 user -> view : 사용자 정보 입력(이름, 성별)
@@ -15,5 +17,8 @@ repo -> db_c : 사용자 정보 저장(이름, 성별)
 repo --> vm : 저장 완료
 vm --> view : 저장 완료 
 view --> user : 동화 리스트 화면으로 이동
+else 저장된 사용자 정보 있는 경우
+view2 --> user : 동화 리스트 화면으로 이동
+end
 
 @enduml
