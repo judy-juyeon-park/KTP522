@@ -1,0 +1,65 @@
+@startuml lv2_module
+skinparam componentStyle rectangle
+
+node Client{
+    package <<layer>>\nModelC {
+        component MTaleRepository as TaleRepository
+        component MTaleApiService as TaleApiService
+        component MTTSApiService as TTSApiService
+    }
+
+    package <<layer>>\nViewModel {
+        component MTaleListViewModel as TaleListViewModel
+        component MTaleDetailViewModel as TaleDetailViewModel
+    }
+
+    package <<layer>>\nView {
+        component TaleListActivity
+        component TaleDetailActivity
+    }
+
+    database TaleClientDB
+}
+
+
+
+node Server {
+
+    package <<layer>>\nController {
+        component MRouter as Router
+        component MTaleController as TaleController
+        component MTaleAIController as TaleAIController
+    }
+
+    package <<layer>>\nModelS {
+        component MTaleModel as TaleModel
+        component MTaleLogModel as TaleLogModel
+    }
+
+    database TaleServerDB
+}
+
+Router ..> TaleController
+TaleController ..> TaleModel
+TaleModel ..> TaleServerDB
+
+Router ..> TaleAIController
+TaleAIController ..> TaleLogModel
+TaleLogModel ..> TaleServerDB
+
+TaleRepository ..> TaleClientDB
+TaleRepository ..> TaleApiService
+TaleDetailViewModel ..> TTSApiService
+
+TaleListViewModel ..> TaleRepository
+TaleDetailViewModel ..> TaleRepository
+
+TaleListViewModel ..> TaleListActivity
+TaleDetailViewModel ..> TaleDetailActivity
+
+TaleApiService ..> Router
+TaleController ..> TaleApiService
+
+
+
+@enduml
