@@ -25,3 +25,12 @@ class TaleDetailViewModelFactory(
         return TaleDetailViewModel(ttsApiService, taleItem) as T
     }
 }
+
+@Suppress("UNCHECKED_CAST")
+class TaleCreationViewModelFactory(
+    private val repository: TaleRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return TaleCreationViewModel(repository) as T
+    }
+}

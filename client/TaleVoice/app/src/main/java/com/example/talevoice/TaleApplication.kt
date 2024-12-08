@@ -61,6 +61,13 @@ class TaleApplication : Application() {
                 .build()
                 .create(TaleApiService::class.java)
 
+            val fakeApiService: TaleApiService = Retrofit.Builder()
+                .baseUrl(BuildConfig.WAS_URL)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(TaleApiService::class.java)
+
             // Repository 초기화
             taleRepository = DefaultTaleRepository(
                 localDataSource = database.taleDao(),

@@ -58,4 +58,30 @@ class DefaultTaleRepository (
             }
         }
     }
+
+    override suspend fun getTaleCreation(): TaleCreation {
+        return withContext(dispatcher) {
+            val response = networkApiService.getTaleCreation() // 실제 API 호출 필요
+            if (response.isSuccessful) {
+                val networkTaleContent = response.body()
+                //networkTaleContent?.data ?: throw IllegalStateException("Response body is null")
+                networkTaleContent?: throw IllegalStateException("Response body is null")
+            } else {
+                throw Exception("Failed to create tale: ${response.errorBody()?.string()}")
+            }
+        }
+    }
+
+    override suspend fun getTalePrompts(taleId: String): TalePrompts {
+        return withContext(dispatcher) {
+            val response = networkApiService.getTalePrompts(taleId) // 실제 API 호출 필요
+            if (response.isSuccessful) {
+                val networkTaleContent = response.body()
+                //networkTaleContent?.data ?: throw IllegalStateException("Response body is null")
+                networkTaleContent?: throw IllegalStateException("Response body is null")
+            } else {
+                throw Exception("Failed to fetch tale prompts: ${response.errorBody()?.string()}")
+            }
+        }
+    }
 }

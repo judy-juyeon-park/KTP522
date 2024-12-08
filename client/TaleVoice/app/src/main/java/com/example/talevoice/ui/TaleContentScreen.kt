@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -102,7 +103,6 @@ fun TaleContentScreen(taleItem: TaleItem) {
 
     Box(Modifier.fillMaxSize()) {
 
-
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
@@ -162,6 +162,22 @@ fun TaleContentScreen(taleItem: TaleItem) {
                 )
             }
         }
+
+        /*// 좋아요 버튼
+        IconButton(
+            onClick = {
+                // 좋아요 로직 처리
+            },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 16.dp, end = 16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_thumb_up_off_alt_24),
+                contentDescription = "Like",
+                tint = Color.Black
+            )
+        }*/
 
         FloatingActionButton(
             onClick = {
