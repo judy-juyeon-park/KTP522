@@ -1,0 +1,27 @@
+@startuml seq_get_tale_list
+
+actor User as user
+participant UserInfoView as view
+participant UserInfoViewModel as vm
+participant TaleRepository as repo
+participant TaleApiService as api
+participant Router as router
+participant TaleAIController as ctr
+participant TaleServerDB as db
+
+
+user -> view : 동화 내용 화면에서 진입
+view --> user : 동화 내용 화면 표시
+user -> view : 동화 좋아요 버튼 입력
+view -> vm : 동화 좋아요 요청
+vm -> repo : 동화 좋아요 요청\n(\w 동화 내용)
+repo -> api : 동화 좋아요 요청\n(\w 동화 내용)
+api -> router : TaleLogInterface 호출\n(\w 동화 내용)
+router -> ctr : TaleLogInterface 요청 전달
+ctr -> db : 좋아요 정보 저장
+db --> ctr : 좋아요 정보 저장 완료
+ctr --> router : 좋아요 정보 저장 완료
+router --> api : TaleLogInterface 완료
+api --> repo : 동화 좋아요 요청 완료
+repo --> vm : 동화 좋아요 요청 완료
+@enduml
