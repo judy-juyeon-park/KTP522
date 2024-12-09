@@ -1,0 +1,21 @@
+@startuml lv1_deployment
+node Client {
+    object EClient <<process>>
+}
+node Server {
+   object Eserver <<process>> 
+}
+node TTSCloudeService {
+  object ETTSCloudService <<thirdparty>> 
+}
+
+node AIService {
+  object EAIService <<thirdparty>> 
+}
+
+
+Client --> Server
+Client --> TTSCloudeService
+Server --> AIService
+
+@enduml

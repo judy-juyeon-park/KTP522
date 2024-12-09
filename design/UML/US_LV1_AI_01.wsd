@@ -1,0 +1,16 @@
+@startuml lv1_us01
+/'
+사용자 정보 취득
+
+'/
+hide footbox
+
+actor 사용자 as usr
+participant "동화읽기 서비스" as srv
+
+usr -> srv : 1. 사용자 정보 입력 화면 진입
+srv --> usr : 2. 사용자 정보 입력 화면 표시
+usr -> srv : 2. 사용자 정보 입력
+srv -> srv : 3. 사용자 정보 저장
+
+@enduml

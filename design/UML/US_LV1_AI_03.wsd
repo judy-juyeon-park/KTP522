@@ -1,0 +1,13 @@
+@startuml lv1_us01
+/'
+생성 동화 사용자 피드백 반영
+'/
+hide footbox
+
+actor 사용자 as usr
+participant "동화읽기 서비스" as srv
+
+usr -> srv : 1. 동화에 좋아요 표시
+srv -> srv : 2. 동화 좋아요 정보 저장
+
+@enduml

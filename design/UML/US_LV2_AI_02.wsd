@@ -1,0 +1,35 @@
+@startuml lv2_us01
+/'
+사용자 정보 기반 동화 생성
+'/
+hide footbox
+
+actor User as usr
+participant Client as cli
+participant Server as svr
+participant AISerivce as ai
+
+usr -> cli : 1. 동화 생성 메뉴 실행
+activate cli
+cli --> usr : 2. 로딩 화면 표시
+cli -> svr : 3. 동화 생성 요청
+activate svr
+svr -> ai : 4. 동화 생성 요청
+ai --> svr : 5. 동화 데이터 응답
+
+svr --> cli : 6. 동화 데이터 응답
+deactivate svr
+
+cli --> svr : 7. 동화 삽화 생성 요청
+activate svr
+svr -> ai : 8. 동화 삽화 생성 요청
+ai --> svr : 5. 동화 삽화 데이터 응답
+
+svr --> cli : 6. 동화 삽화 데이터 응답
+deactivate svr
+
+
+cli --> usr : 동화 보기 화면으로 전환 
+deactivate cli
+
+@enduml
