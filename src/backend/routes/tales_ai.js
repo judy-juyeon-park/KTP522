@@ -235,18 +235,6 @@ router.get('/illust',async(req, res, next)=>{
  *                  type: integer
  *                message:
  *                  type: string
- *                data:
- *                  type: object
- *                  properties:
- *                      title:
- *                          type: string
- *                      story:
- *                          type: array
- *                          items:
- *                              type : string
- *                      createdAt:
- *                          type: string
- *                          format: date-time
  *      400:
  *        description: Invalid Input
  *      500:
@@ -274,12 +262,12 @@ router.post('/like', async(req, res, next)=>{
         .then((newTalelog) =>{
             res.json({
                 code: 200,
-                message:"생성된 동화를 로깅했습니다.",
-                data: {
-                    title: newTalelog.title,
-                    story: newTalelog.story,
-                    createdAt: newTalelog.createdAt
-                }
+                message:"생성된 동화를 로깅했습니다."
+                // data: {
+                //     title: newTalelog.title,
+                //     story: newTalelog.story,
+                //     createdAt: newTalelog.createdAt
+                // }
             })
             return;
         })
