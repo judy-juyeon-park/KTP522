@@ -46,6 +46,8 @@ var talelog = require('../model/talelog');
  *                              type: string
  *      400:
  *        description: Invalid Input
+ *      422:
+ *          description: AI Error
  *      500:
  *        description: Server Error
  */
@@ -65,6 +67,7 @@ router.get('/story',async(req, res, next)=>{
         return;
         }   
 
+        try{
         const story = await AImodel.generateStory(name, gender);
         res.json({
             code: 200,
@@ -75,6 +78,17 @@ router.get('/story',async(req, res, next)=>{
             }
         })
         return;
+
+        } catch(err){
+            if(err){
+                console.log(err);
+                res.json({
+                    code: 422,
+                    message: "동화생성 오류가 발생했습니다."
+                })
+                return;
+            }
+        }
 
     }catch (err) { 
         if(err){
@@ -132,6 +146,8 @@ router.get('/story',async(req, res, next)=>{
  *                          type: string
  *      400:
  *        description: Invalid Input
+ *      422:
+ *          description: AI Error
  *      500:
  *        description: Server Error
  */
@@ -151,6 +167,7 @@ router.get('/illust',async(req, res, next)=>{
         return;
         }   
 
+        try{
         const imagePath = await AImodel.generateIllustration(paragraph, gender);
         res.json({
             code: 200,
@@ -161,6 +178,16 @@ router.get('/illust',async(req, res, next)=>{
             }
         })
         return;
+        }catch(err) {
+            if(err){
+                console.log(err);
+                res.json({
+                    code: 422,
+                    message: "삽화생성 오류가 발생했습니다."
+                })
+                return;
+            }
+        }
 
     }catch (err) { 
         if(err){
