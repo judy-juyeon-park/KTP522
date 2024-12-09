@@ -20,7 +20,7 @@ class TaleCreationViewModel(private val repository: TaleRepository) : ViewModel(
     private val _talePromptsResult = MutableStateFlow<TalePrompts?>(null)
     val talePromptsResult = _talePromptsResult.asStateFlow()
 
-    fun createTale() {
+/*    fun createTale() {
         viewModelScope.launch {
             _isCreatingTale.value = true
             val result = repository.getTaleCreation()
@@ -53,5 +53,5 @@ class TaleCreationViewModel(private val repository: TaleRepository) : ViewModel(
                 }
             )
         }
-    }
+    }*/
 }

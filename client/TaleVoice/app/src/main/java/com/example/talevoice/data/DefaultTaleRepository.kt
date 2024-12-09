@@ -59,7 +59,7 @@ class DefaultTaleRepository (
         }
     }
 
-    override suspend fun getTaleCreation(): TaleCreation {
+/*    override suspend fun getTaleCreation(): TaleCreation {
         return withContext(dispatcher) {
             val response = networkApiService.getTaleCreation() // 실제 API 호출 필요
             if (response.isSuccessful) {
@@ -83,5 +83,5 @@ class DefaultTaleRepository (
                 throw Exception("Failed to fetch tale prompts: ${response.errorBody()?.string()}")
             }
         }
-    }
+    }*/
 }

@@ -87,7 +87,7 @@ fun TaleListScreen(navController: NavHostController, userName: String?, gender: 
             Button(
                 onClick = {
 
-                    creationViewModel.createTale() // 버튼 클릭 시 동화 생성 API 호출
+                    //creationViewModel.createTale() // 버튼 클릭 시 동화 생성 API 호출
                     isLoading = true // 로딩 시작
                 },
                 modifier = Modifier.fillMaxWidth(),
