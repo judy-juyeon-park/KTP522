@@ -1,0 +1,14 @@
+@startuml lv1_us01
+/'
+사용자 정보 기반 동화 생성
+'/
+hide footbox
+
+actor 사용자 as usr
+participant "동화읽기 서비스" as srv
+
+usr -> srv : 1. 동화 리스트 화면 진입\n 동화 생성 메뉴 실행
+srv -> srv : 2. 사용자 정보 기반 동화 및 삽화 생성
+srv --> usr : 3. 생성된 동화 및 삽화 보여주기
+
+@enduml
