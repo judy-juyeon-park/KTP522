@@ -31,7 +31,7 @@ import androidx.navigation.toRoute
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.ui.TaleContentScreen
 import com.example.talevoice.ui.TaleCreationScreen
-import com.example.talevoice.ui.TaleInputScreen
+import com.example.talevoice.ui.UserInfoScreen
 import com.example.talevoice.ui.TaleListScreen
 import kotlinx.serialization.Serializable
 
@@ -99,7 +99,7 @@ fun MyApp() {
                 composable("TaleInputScreen") {
                     canNavigateBack.value = false
                     currentScreenTitle.value = "TaleVoice" // 화면에 따른 제목
-                    TaleInputScreen(navController)
+                    UserInfoScreen(navController)
                 }
                 /* composable<TaleList> {
                     canNavigateBack.value = true

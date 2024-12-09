@@ -27,11 +27,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.talevoice.TaleList
 
 
 @Composable
-fun TaleInputScreen(navController: NavHostController) {
+fun UserInfoScreen(navController: NavHostController) {
     var userName by remember { mutableStateOf("") }
     var selectedGender by remember { mutableStateOf<String?>(null) }
 
