@@ -10,6 +10,7 @@ const { swaggerUi, specs } = require("./module/swagger");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var talesRouter = require('./routes/tales');
+var talesAIRouter = require('./routes/tales_ai');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/tales', talesRouter);
+app.use('/api/talesAI', talesAIRouter);
 
 // call swagger module
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
