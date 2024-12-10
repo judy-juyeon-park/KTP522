@@ -16,24 +16,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.talevoice.viewmodel.UserInfoViewModel
 
 
 @Composable
-fun UserInfoScreen(navController: NavHostController) {
-    var userName by remember { mutableStateOf("") }
-    var selectedGender by remember { mutableStateOf("남성") }
+fun UserInfoScreen(
+    navController: NavHostController,
+    userInfoViewModel: UserInfoViewModel = viewModel()) {
+
+    val name = userInfoViewModel.name
+    val gender = userInfoViewModel.gender
 
     val unselectedColor = MaterialTheme.colorScheme.primaryContainer
     val selectedColor = MaterialTheme.colorScheme.primary
+
+    // 저장 버튼 활성화 조건: 이름과 성별이 모두 입력된 경우
+    val isSaveEnabled = name.isNotEmpty() && gender.isNotEmpty()
 
     Box(
         modifier = Modifier
@@ -64,12 +68,14 @@ fun UserInfoScreen(navController: NavHostController) {
 
             // 입력 필드
             OutlinedTextField(
-                value = userName,
-                onValueChange = { userName = it },
+                value = name,
+                onValueChange = { newName ->
+                    userInfoViewModel.onNameChanged(newName) // Delegate to ViewModel
+                },
                 label = { Text("Input") },
                 trailingIcon = {
-                    if (userName.isNotEmpty()) {
-                        IconButton(onClick = { userName = "" }) {
+                    if (name.isNotEmpty()) {
+                        IconButton(onClick = { userInfoViewModel.onNameChanged("") }) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Clear text"
@@ -92,19 +98,19 @@ fun UserInfoScreen(navController: NavHostController) {
                     .padding(bottom = 24.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                listOf("남성", "여성").forEach { gender ->
+                listOf("남성", "여성").forEach { genderOption ->
                     Button(
-                        onClick = { selectedGender = gender },
+                        onClick = { userInfoViewModel.onGenderChanged(genderOption) },
                         shape = RoundedCornerShape(0.dp),
                         colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                            containerColor = if (selectedGender == gender) selectedColor else unselectedColor,
-                            contentColor = if (selectedGender == gender) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                            containerColor = if (gender == genderOption) selectedColor else unselectedColor,
+                            contentColor = if (gender == genderOption) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
                         ),
                         modifier = Modifier
                             .weight(1f)
                             .padding(horizontal = 4.dp)
                     ) {
-                        Text(text = gender)
+                        Text(text = genderOption)
                     }
                 }
             }
@@ -112,14 +118,12 @@ fun UserInfoScreen(navController: NavHostController) {
             // 저장 버튼
             Button(
                 onClick = {
-                    val name= userName.ifEmpty { "Unknown" }
-                    val gender = selectedGender ?: "Unknown"
-                    navController.navigate("TaleList/$name/$gender")
+                    navController.navigate("TaleList/${userInfoViewModel.name}/${userInfoViewModel.gender}")
                 },
-                enabled = userName.isNotEmpty(), // 이름이 비어 있으면 비활성화
+                enabled = isSaveEnabled, // 이름과 성별이 모두 입력된 경우 활성화
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = if (userName.isNotEmpty()) selectedColor else unselectedColor,
-                    contentColor = if (userName.isNotEmpty()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                    containerColor = if (isSaveEnabled) selectedColor else unselectedColor,
+                    contentColor = if (isSaveEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
                 ),
                 shape = RoundedCornerShape(0.dp),
                 modifier = Modifier.fillMaxWidth()
