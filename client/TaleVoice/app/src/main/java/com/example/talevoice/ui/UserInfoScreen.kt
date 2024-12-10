@@ -3,11 +3,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -32,7 +30,7 @@ import androidx.navigation.NavHostController
 @Composable
 fun UserInfoScreen(navController: NavHostController) {
     var userName by remember { mutableStateOf("") }
-    var selectedGender by remember { mutableStateOf<String?>(null) }
+    var selectedGender by remember { mutableStateOf("남성") }
 
     val unselectedColor = MaterialTheme.colorScheme.primaryContainer
     val selectedColor = MaterialTheme.colorScheme.primary
@@ -87,35 +85,27 @@ fun UserInfoScreen(navController: NavHostController) {
                     .padding(bottom = 24.dp)
             )
 
-            // 성별 선택 버튼 영역
+            // Segmented Button for Gender Selection
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 24.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.Center
             ) {
-                Button(
-                    onClick = { selectedGender = "남성" },
-                    shape = RoundedCornerShape(0.dp),
-                    modifier = Modifier.weight(1f, true),
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                        containerColor = if (selectedGender == "남성") selectedColor else unselectedColor
-                    )
-                ) {
-                    Text("남성")
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Button(
-                    onClick = { selectedGender = "여성" },
-                    shape = RoundedCornerShape(0.dp),
-                    modifier = Modifier.weight(1f, true),
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                        containerColor = if (selectedGender == "여성") selectedColor else unselectedColor
-                    )
-                ) {
-                    Text("여성")
+                listOf("남성", "여성").forEach { gender ->
+                    Button(
+                        onClick = { selectedGender = gender },
+                        shape = RoundedCornerShape(0.dp),
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = if (selectedGender == gender) selectedColor else unselectedColor,
+                            contentColor = if (selectedGender == gender) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 4.dp)
+                    ) {
+                        Text(text = gender)
+                    }
                 }
             }
 
@@ -126,6 +116,11 @@ fun UserInfoScreen(navController: NavHostController) {
                     val gender = selectedGender ?: "Unknown"
                     navController.navigate("TaleList/$name/$gender")
                 },
+                enabled = userName.isNotEmpty(), // 이름이 비어 있으면 비활성화
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = if (userName.isNotEmpty()) selectedColor else unselectedColor,
+                    contentColor = if (userName.isNotEmpty()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                ),
                 shape = RoundedCornerShape(0.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
