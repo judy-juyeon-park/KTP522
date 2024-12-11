@@ -1,13 +1,18 @@
 package com.example.talevoice.data
 
+import android.util.Log
 import com.example.talevoice.data.source.local.LocalTaleListItem
 import com.example.talevoice.data.source.local.TaleDao
 import com.example.talevoice.data.source.server.TaleApiService
+import com.example.talevoice.data.source.server.TaleCreationRequest
+import com.example.talevoice.data.source.server.TaleCreationResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class DefaultTaleRepository (
     private val localDataSource: TaleDao,
@@ -58,30 +63,19 @@ class DefaultTaleRepository (
             }
         }
     }
+    override suspend fun createTale(name: String, gender: String): TaleCreationResponse {
+        Log.d("TaleRepository", "finally request create tale with name=$name and gender=$gender")
+        val request = TaleCreationRequest(name = name, gender = gender)
+        val response = networkApiService.createTale(request)
 
-/*    override suspend fun getTaleCreation(): TaleCreation {
-        return withContext(dispatcher) {
-            val response = networkApiService.getTaleCreation() // 실제 API 호출 필요
+        try {
             if (response.isSuccessful) {
-                val networkTaleContent = response.body()
-                //networkTaleContent?.data ?: throw IllegalStateException("Response body is null")
-                networkTaleContent?: throw IllegalStateException("Response body is null")
+                return response.body() ?: throw Exception("Empty response body")
             } else {
-                throw Exception("Failed to create tale: ${response.errorBody()?.string()}")
+                throw Exception("Error creating tale: ${response.errorBody()?.string()}")
             }
+        } finally {
+            response.errorBody()?.close()
         }
     }
-
-    override suspend fun getTalePrompts(taleId: String): TalePrompts {
-        return withContext(dispatcher) {
-            val response = networkApiService.getTalePrompts(taleId) // 실제 API 호출 필요
-            if (response.isSuccessful) {
-                val networkTaleContent = response.body()
-                //networkTaleContent?.data ?: throw IllegalStateException("Response body is null")
-                networkTaleContent?: throw IllegalStateException("Response body is null")
-            } else {
-                throw Exception("Failed to fetch tale prompts: ${response.errorBody()?.string()}")
-            }
-        }
-    }*/
 }
