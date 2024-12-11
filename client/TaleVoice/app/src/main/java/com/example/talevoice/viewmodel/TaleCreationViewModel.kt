@@ -44,4 +44,8 @@ class TaleCreationViewModel(private val repository: TaleRepository) : ViewModel(
     suspend fun getCreatedTaleItem(name: String, gender: String): TaleCreation {
         return repository.createTale(name, gender)
     }
+
+    fun resetCreatedTale() {
+        _createdTale.value = null
+    }
 }

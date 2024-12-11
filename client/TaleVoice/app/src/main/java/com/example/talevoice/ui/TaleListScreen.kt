@@ -53,16 +53,17 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
 
     // 생성된 동화가 있으면 해당 화면으로 이동
     LaunchedEffect(createdTale) {
-        Log.d("TaleListScreen", "LaunchedEffect")
+        Log.d("TaleListScreen", "LaunchedEffect!!!!")
         createdTale?.let {
             isLoading = false // 로딩 종료
-            //navController.navigate("TaleCreationScreen/${it.title}") // 동화 제목으로 화면 이동
-            val safeName = name ?: "Unknown"
-            val safeGender = gender ?: "Unknown"
-            val taleCreation = creationViewModel.getCreatedTaleItem(safeName, safeGender)
+            val taleCreation = creationViewModel.getCreatedTaleItem(
+                name = name.orEmpty().ifBlank { "Unknown" },
+                gender = gender.orEmpty().ifBlank { "Unknown" })
             navController.navigate(taleCreation) {
                 popUpTo<TaleList>()
             }
+            // createdTale 초기화
+            creationViewModel.resetCreatedTale()
         }
     }
 
