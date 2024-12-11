@@ -27,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.talevoice.data.TaleCreation
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.ui.TaleContentScreen
 import com.example.talevoice.ui.TaleCreationScreen
@@ -92,19 +93,14 @@ fun MyApp() {
         content = { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = "TaleInputScreen",
+                startDestination = "UserInfoScreen",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable("TaleInputScreen") {
+                composable("UserInfoScreen") {
                     canNavigateBack.value = false
                     currentScreenTitle.value = "TaleVoice" // 화면에 따른 제목
                     UserInfoScreen(navController)
                 }
-                /* composable<TaleList> {
-                    canNavigateBack.value = true
-                    currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
-                    TaleListScreen(navController)
-                }*/
                 composable("TaleList/{name}/{gender}") { backStackEntry ->
                     canNavigateBack.value = true
                     val name = backStackEntry.arguments?.getString("name")
@@ -118,10 +114,17 @@ fun MyApp() {
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
                     TaleContentScreen(taleItem)
                 }
-                composable("TaleCreationScreen") {
+               /* composable<TaleCreation> { backStackEntry ->
                     canNavigateBack.value = true
-                    currentScreenTitle.value = "새로운 동화 생성"
-                    TaleCreationScreen(navController)
+                    val taleCreation: TaleCreation = backStackEntry.toRoute()
+                    currentScreenTitle.value = taleCreation.title // 화면에 따른 제목
+                    TaleCreationScreen(taleCreation)
+                }*/
+                composable("TaleCreationScreen/{title}") { backStackEntry ->
+                    canNavigateBack.value = true
+                    val title = backStackEntry.arguments?.getString("title") ?: "Unknown Tale"
+                    currentScreenTitle.value = title // 화면 제목 업데이트
+                    TaleCreationScreen(title = title)
                 }
             }
         }

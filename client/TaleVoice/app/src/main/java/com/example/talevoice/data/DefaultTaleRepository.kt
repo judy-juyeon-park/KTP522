@@ -3,16 +3,13 @@ package com.example.talevoice.data
 import android.util.Log
 import com.example.talevoice.data.source.local.LocalTaleListItem
 import com.example.talevoice.data.source.local.TaleDao
+import com.example.talevoice.data.source.server.NetworkTaleCreationRequest
 import com.example.talevoice.data.source.server.TaleApiService
-import com.example.talevoice.data.source.server.TaleCreationRequest
-import com.example.talevoice.data.source.server.TaleCreationResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 class DefaultTaleRepository (
     private val localDataSource: TaleDao,
@@ -63,14 +60,14 @@ class DefaultTaleRepository (
             }
         }
     }
-    override suspend fun createTale(name: String, gender: String): TaleCreationResponse {
+    override suspend fun createTale(name: String, gender: String): TaleCreation {
         Log.d("TaleRepository", "finally request create tale with name=$name and gender=$gender")
-        val request = TaleCreationRequest(name = name, gender = gender)
+        val request = NetworkTaleCreationRequest(name = name, gender = gender)
         val response = networkApiService.createTale(request)
-
         try {
             if (response.isSuccessful) {
-                return response.body() ?: throw Exception("Empty response body")
+                val networkTaleCreation = response.body()
+                return networkTaleCreation?.data ?: throw IllegalStateException("Response body is null")
             } else {
                 throw Exception("Error creating tale: ${response.errorBody()?.string()}")
             }
