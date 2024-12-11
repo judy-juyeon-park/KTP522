@@ -56,12 +56,13 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
         Log.d("TaleListScreen", "LaunchedEffect")
         createdTale?.let {
             isLoading = false // 로딩 종료
-         /*   val taleCreation = creationViewModel.getCreatedTaleItem2(name, gender)
+            //navController.navigate("TaleCreationScreen/${it.title}") // 동화 제목으로 화면 이동
+            val safeName = name ?: "Unknown"
+            val safeGender = gender ?: "Unknown"
+            val taleCreation = creationViewModel.getCreatedTaleItem(safeName, safeGender)
             navController.navigate(taleCreation) {
                 popUpTo<TaleList>()
-            }*/
-            val title = it.title
-            navController.navigate("TaleCreationScreen/${title}") // 동화 제목으로 화면 이동
+            }
         }
     }
 

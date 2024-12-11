@@ -114,18 +114,18 @@ fun MyApp() {
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
                     TaleContentScreen(taleItem)
                 }
-               /* composable<TaleCreation> { backStackEntry ->
+                composable<TaleCreation> { backStackEntry ->
                     canNavigateBack.value = true
                     val taleCreation: TaleCreation = backStackEntry.toRoute()
                     currentScreenTitle.value = taleCreation.title // 화면에 따른 제목
                     TaleCreationScreen(taleCreation)
-                }*/
-                composable("TaleCreationScreen/{title}") { backStackEntry ->
+                }
+                /*composable("TaleCreationScreen/{title}") { backStackEntry ->
                     canNavigateBack.value = true
                     val title = backStackEntry.arguments?.getString("title") ?: "Unknown Tale"
                     currentScreenTitle.value = title // 화면 제목 업데이트
-                    TaleCreationScreen(title = title)
-                }
+                    TaleCreationScreen(navController, title)
+                }*/
             }
         }
     )

@@ -7,7 +7,6 @@ import com.example.talevoice.data.TaleCreation
 import com.example.talevoice.data.TaleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class TaleCreationViewModel(private val repository: TaleRepository) : ViewModel() {
@@ -21,7 +20,6 @@ class TaleCreationViewModel(private val repository: TaleRepository) : ViewModel(
     private val _errorMessage = MutableStateFlow<String?>(null) // 오류 메시지
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    // 동화 생성 메서드
     fun createTale(name: String, gender: String) {
         _isCreatingTale.value = true
         _errorMessage.value = null
@@ -43,17 +41,7 @@ class TaleCreationViewModel(private val repository: TaleRepository) : ViewModel(
         }
     }
 
-    // 생성된 Tale 데이터를 반환하는 메서드
-    fun getCreatedTaleItem(): TaleCreation? {
-        return _createdTale.value
-    }
-
-    suspend fun getCreatedTaleItem2(name: String?, gender: String?): TaleCreation {
-        return repository.createTale(name.toString(), gender.toString())
-    }
-
-    // 비동기 방식으로 생성된 Tale 데이터를 가져오는 메서드 (코루틴 사용)
-    suspend fun fetchCreatedTaleItem(): TaleCreation? {
-        return createdTale.first()
+    suspend fun getCreatedTaleItem(name: String, gender: String): TaleCreation {
+        return repository.createTale(name, gender)
     }
 }
