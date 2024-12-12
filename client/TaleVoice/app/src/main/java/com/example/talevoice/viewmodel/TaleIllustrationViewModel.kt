@@ -15,7 +15,7 @@ import java.io.File
 import java.net.URL
 
 
-class IllustrationViewModel(private val repository: TaleRepository) : ViewModel() {
+class TaleIllustrationViewModel(private val repository: TaleRepository) : ViewModel() {
 
     private val _illustrations = MutableStateFlow<List<TaleIllustration>>(emptyList())
     val illustrations: StateFlow<List<TaleIllustration>> = _illustrations

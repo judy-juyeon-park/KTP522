@@ -32,10 +32,10 @@ import androidx.navigation.NavHostController
 import com.example.talevoice.TaleApplication
 import com.example.talevoice.TaleList
 import com.example.talevoice.data.IllustPrompt
-import com.example.talevoice.viewmodel.IllustrationViewModel
-import com.example.talevoice.viewmodel.IllustrationViewModelFactory
+import com.example.talevoice.viewmodel.TaleIllustrationViewModel
 import com.example.talevoice.viewmodel.TaleStoryViewModel
 import com.example.talevoice.viewmodel.TaleCreationViewModelFactory
+import com.example.talevoice.viewmodel.TaleIllustrationViewModelFactory
 import com.example.talevoice.viewmodel.TaleListViewModel
 import com.example.talevoice.viewmodel.TaleListViewModelFactory
 import kotlinx.coroutines.launch
@@ -52,14 +52,14 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
     val creationViewModel: TaleStoryViewModel = viewModel(
         factory = TaleCreationViewModelFactory(repository)
     )
-    val illustrationViewModel: IllustrationViewModel = viewModel(
-        factory = IllustrationViewModelFactory(repository)
+    val taleIllustrationViewModel: TaleIllustrationViewModel = viewModel(
+        factory = TaleIllustrationViewModelFactory(repository)
     )
 
     var isLoading by remember { mutableStateOf(false) }
     val taleList by viewModel.taleList.collectAsState()
     val createdTale by creationViewModel.createdTale.collectAsState()
-    val navigateToTaleCreation by illustrationViewModel.navigateToTaleCreation.collectAsState()
+    val navigateToTaleCreation by taleIllustrationViewModel.navigateToTaleCreation.collectAsState()
 
     // 생성된 동화가 있으면 동화 삽화 생성 요청
     LaunchedEffect(createdTale) {
@@ -72,7 +72,7 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
                     gender = gender.toString()
                 )
             }
-            illustrationViewModel.fetchIllustrations(requests)
+            taleIllustrationViewModel.fetchIllustrations(requests)
         }
     }
 
@@ -89,7 +89,7 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
 
             isLoading = false
             creationViewModel.resetCreatedTale()
-            illustrationViewModel.resetNavigationState()
+            taleIllustrationViewModel.resetNavigationState()
         }
     }
 

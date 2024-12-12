@@ -36,11 +36,11 @@ class TaleCreationViewModelFactory(
 }
 
 @Suppress("UNCHECKED_CAST")
-class IllustrationViewModelFactory(
+class TaleIllustrationViewModelFactory(
     private val repository: TaleRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return IllustrationViewModel(repository) as T
+        return TaleIllustrationViewModel(repository) as T
     }
 }
 

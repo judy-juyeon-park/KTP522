@@ -21,8 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,9 +35,8 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.example.talevoice.TaleApplication
 import com.example.talevoice.data.TaleStory
-import com.example.talevoice.data.TaleIllustration
-import com.example.talevoice.viewmodel.IllustrationViewModel
-import com.example.talevoice.viewmodel.IllustrationViewModelFactory
+import com.example.talevoice.viewmodel.TaleIllustrationViewModel
+import com.example.talevoice.viewmodel.TaleIllustrationViewModelFactory
 
 
 @Composable
@@ -47,8 +44,8 @@ fun TaleCreationScreen(navController: NavHostController, taleCreation: TaleStory
 
     Log.d("TaleCreationScreen", "TaleCreationScreen called!!!!!")
     val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
-    val illustrationViewModel: IllustrationViewModel = viewModel(
-        factory = IllustrationViewModelFactory(repository)
+    val illustrationViewModel: TaleIllustrationViewModel = viewModel(
+        factory = TaleIllustrationViewModelFactory(repository)
     )
 
     // TODO
