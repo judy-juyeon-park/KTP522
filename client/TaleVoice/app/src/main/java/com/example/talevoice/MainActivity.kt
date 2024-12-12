@@ -27,7 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.talevoice.data.TaleCreation
+import com.example.talevoice.data.TaleStory
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.ui.TaleContentScreen
 import com.example.talevoice.ui.TaleCreationScreen
@@ -127,7 +127,7 @@ fun MyApp() {
                     canNavigateBack.value = true
                     val taleJson = backStackEntry.arguments?.getString("taleJson")
                     val decodedString = URLDecoder.decode(taleJson, "UTF-8")
-                    val taleCreationItem = Json.decodeFromString<TaleCreation>(decodedString)
+                    val taleCreationItem = Json.decodeFromString<TaleStory>(decodedString)
                     currentScreenTitle.value = taleCreationItem.title  // 화면 제목 업데이트
                     TaleCreationScreen(navController, taleCreationItem)
                 }

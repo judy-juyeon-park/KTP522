@@ -3,7 +3,7 @@ package com.example.talevoice.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TaleCreation(
+data class TaleStory(
     val title: String,
     val story: List<String>
 )

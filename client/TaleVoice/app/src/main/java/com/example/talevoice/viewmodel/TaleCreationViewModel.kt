@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.talevoice.TaleApplication
-import com.example.talevoice.data.TaleCreation
+import com.example.talevoice.data.TaleStory
 import com.example.talevoice.data.TaleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +17,8 @@ class TaleCreationViewModel(private val repository: TaleRepository) : ViewModel(
     private val _isCreatingTale = MutableStateFlow(false) // 로딩 상태
     val isCreatingTale: StateFlow<Boolean> = _isCreatingTale
 
-    private val _createdTale = MutableStateFlow<TaleCreation?>(null) // 생성된 동화 데이터
-    val createdTale: StateFlow<TaleCreation?> = _createdTale
+    private val _createdTale = MutableStateFlow<TaleStory?>(null) // 생성된 동화 데이터
+    val createdTale: StateFlow<TaleStory?> = _createdTale
 
     private val _errorMessage = MutableStateFlow<String?>(null) // 오류 메시지
     val errorMessage: StateFlow<String?> = _errorMessage
@@ -44,7 +44,7 @@ class TaleCreationViewModel(private val repository: TaleRepository) : ViewModel(
         }
     }
 
-    fun getCreatedTaleItem(): TaleCreation? {
+    fun getCreatedTaleItem(): TaleStory? {
         return _createdTale.value
     }
 

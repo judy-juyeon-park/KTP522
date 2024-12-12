@@ -6,6 +6,6 @@ interface TaleRepository {
 
     fun getTaleList() : Flow<List<TaleListItem>>
     suspend fun getTaleItem(taleId: String) : TaleItem
-    suspend fun createTale(name: String, gender: String): TaleCreation
+    suspend fun createTale(name: String, gender: String): TaleStory
     suspend fun createIllustrations(requests: List<IllustPrompt>): Flow<TaleIllustration>
 }

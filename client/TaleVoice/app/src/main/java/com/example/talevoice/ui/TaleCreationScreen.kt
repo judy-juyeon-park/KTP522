@@ -36,14 +36,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.example.talevoice.TaleApplication
-import com.example.talevoice.data.TaleCreation
+import com.example.talevoice.data.TaleStory
 import com.example.talevoice.data.TaleIllustration
 import com.example.talevoice.viewmodel.IllustrationViewModel
 import com.example.talevoice.viewmodel.IllustrationViewModelFactory
 
 
 @Composable
-fun TaleCreationScreen(navController: NavHostController, taleCreation: TaleCreation) {
+fun TaleCreationScreen(navController: NavHostController, taleCreation: TaleStory) {
 
     Log.d("TaleCreationScreen", "TaleCreationScreen called!!!!!")
     val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository

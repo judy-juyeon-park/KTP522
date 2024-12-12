@@ -61,7 +61,7 @@ class DefaultTaleRepository (
             }
         }
     }
-    override suspend fun createTale(name: String, gender: String): TaleCreation {
+    override suspend fun createTale(name: String, gender: String): TaleStory {
         val request = NetworkTaleCreationRequest(name = name, gender = gender)
         val response = networkApiService.createTale(request)
         try {
