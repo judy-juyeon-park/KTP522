@@ -14,22 +14,59 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.example.talevoice.TaleApplication
 import com.example.talevoice.data.TaleCreation
+import com.example.talevoice.viewmodel.IllustrationViewModel
+import com.example.talevoice.viewmodel.IllustrationViewModelFactory
 
 
 @Composable
-fun TaleCreationScreen(taleCreation: TaleCreation) {
+fun TaleCreationScreen(navController: NavHostController, taleCreation: TaleCreation) {
     Log.d("TaleCreationScreen", taleCreation.toString())
+
+    val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
+    val illustrationViewModel: IllustrationViewModel = viewModel(
+        factory = IllustrationViewModelFactory(repository)
+    )
+
+    val illustrations by illustrationViewModel.illustrations.collectAsState()
+    val isLoading by illustrationViewModel.isLoading.collectAsState()
+
+    val context = LocalContext.current
+    val firstImageLoaded = illustrationViewModel.firstImageLoaded.collectAsState()
+
+ /*   // Observe the first image
+    LaunchedEffect(illustrations) {
+        if (illustrations.isNotEmpty() && !firstImageLoaded.value) {
+            firstImageLoaded.value = true
+        }
+    }*/
+
+    if (!firstImageLoaded.value) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        return
+    }
 
     val pagerState = rememberPagerState(pageCount = { taleCreation.story.size })
 

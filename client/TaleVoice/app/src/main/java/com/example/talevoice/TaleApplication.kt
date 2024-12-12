@@ -19,6 +19,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import java.util.concurrent.TimeUnit
 
 class TaleApplication : Application() {
 
@@ -50,6 +51,9 @@ class TaleApplication : Application() {
             }
 
             val okHttpClient = OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS) // 연결 시간 초과 설정
+                .readTimeout(30, TimeUnit.SECONDS) // 읽기 시간 초과 설정
+                .writeTimeout(30, TimeUnit.SECONDS) // 쓰기 시간 초과 설정
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(RetryInterceptor(3))
                 .build()

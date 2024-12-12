@@ -129,7 +129,7 @@ fun MyApp() {
                     val decodedString = URLDecoder.decode(taleJson, "UTF-8")
                     val taleCreationItem = Json.decodeFromString<TaleCreation>(decodedString)
                     currentScreenTitle.value = taleCreationItem.title  // 화면 제목 업데이트
-                    TaleCreationScreen(taleCreationItem)
+                    TaleCreationScreen(navController, taleCreationItem)
                 }
             }
         }

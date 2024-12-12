@@ -31,6 +31,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.talevoice.TaleApplication
 import com.example.talevoice.TaleList
+import com.example.talevoice.data.IllustPrompt
+import com.example.talevoice.viewmodel.IllustrationViewModel
+import com.example.talevoice.viewmodel.IllustrationViewModelFactory
 import com.example.talevoice.viewmodel.TaleCreationViewModel
 import com.example.talevoice.viewmodel.TaleCreationViewModelFactory
 import com.example.talevoice.viewmodel.TaleListViewModel
@@ -49,27 +52,40 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
     val creationViewModel: TaleCreationViewModel = viewModel(
         factory = TaleCreationViewModelFactory(repository)
     )
+    val illustrationViewModel: IllustrationViewModel = viewModel(
+        factory = IllustrationViewModelFactory(repository)
+    )
 
     val taleList by viewModel.taleList.collectAsState()
     var isLoading by remember { mutableStateOf(false) }
     val createdTale by creationViewModel.createdTale.collectAsState() // 생성된 동화 감지
 
-    // 생성된 동화가 있으면 해당 화면으로 이동
+    // 생성된 동화가 있으면 동화 삽화 생성 요청
     LaunchedEffect(createdTale) {
         Log.d("TaleListScreen", "LaunchedEffect!")
-        createdTale?.let {
-            isLoading = false // 로딩 종료
-           /* val taleCreation = creationViewModel.getCreatedTaleItem()
-            navController.navigate(taleCreation.toString()) {
-                popUpTo<TaleList>()
-            }*/
+        createdTale?.let { tale ->
+            // 요청 생성
+            val requests = tale.story.mapIndexed { index, text ->
+                IllustPrompt(
+                    page = index + 1,
+                    paragraph = text,
+                    gender = gender.toString()
+                )
+            }
+            illustrationViewModel.fetchIllustrations(requests)
+            /* val taleCreation = creationViewModel.getCreatedTaleItem()
+             navController.navigate(taleCreation.toString()) {
+                 popUpTo<TaleList>()
+             }*/
             // Json 시도
-            val jsonString = Json.encodeToString(it)
+            /*val jsonString = Json.encodeToString(tale)
             val safeJsonString = URLEncoder.encode(jsonString, "UTF-8")
             navController.navigate("TaleCreationScreen/$safeJsonString") {
                 popUpTo<TaleList>()
             }
-            creationViewModel.resetCreatedTale()
+
+            isLoading = false
+            creationViewModel.resetCreatedTale()*/
         }
     }
 

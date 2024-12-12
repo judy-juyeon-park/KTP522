@@ -1,10 +1,9 @@
 package com.example.talevoice.data.source.server
 
-import com.example.talevoice.data.TaleCreation
+import com.example.talevoice.data.TaleIllustration
 
 data class NetworkIllustrationRespond(
-    val status: String,
-    val story_id: String,
-    val page: Int,
-    val illustration_url: String
+    val code: Int,
+    val message: String,
+    val data: TaleIllustration
 )
