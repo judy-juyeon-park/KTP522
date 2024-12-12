@@ -18,4 +18,9 @@ interface TaleApiService {
     suspend fun createTale(
         @Body request: NetworkTaleCreationRequest
     ): Response<NetworkTaleCreationRespond>
+
+    @POST("/api/talesAI/illust")
+    suspend fun createIllustration(
+        @Body request: NetworkIllustrationRequest
+    ): Response<NetworkIllustrationRespond>
 }
