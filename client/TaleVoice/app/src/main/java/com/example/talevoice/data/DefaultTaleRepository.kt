@@ -2,9 +2,13 @@ package com.example.talevoice.data
 
 import com.example.talevoice.data.source.local.LocalTaleListItem
 import com.example.talevoice.data.source.local.TaleDao
+import com.example.talevoice.data.source.server.NetworkIllustrationRequest
 import com.example.talevoice.data.source.server.NetworkTaleCreationRequest
 import com.example.talevoice.data.source.server.TaleApiService
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -73,4 +77,17 @@ class DefaultTaleRepository (
             response.errorBody()?.close()
         }
     }
+
+    override suspend fun createIllustrations(requests: List<NetworkIllustrationRequest>): Flow<TaleIllustration> = flow {
+        for (request in requests) {
+            val response = networkApiService.createIllustration(request)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    emit(TaleIllustration(it.page, it.illustration_url))
+                } ?: throw Exception("Empty response body")
+            } else {
+                throw Exception("Error creating illustration: ${response.errorBody()?.string()}")
+            }
+        }
+    }.flowOn(Dispatchers.IO) // Use IO dispatcher for network operations
 }

@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NetworkIllustrationRequest(
+    val story_id: String,
     val page: Int,
-    val gender: String
+    val paragraph: String
 )
