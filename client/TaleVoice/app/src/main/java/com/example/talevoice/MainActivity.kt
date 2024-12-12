@@ -34,6 +34,8 @@ import com.example.talevoice.ui.TaleCreationScreen
 import com.example.talevoice.ui.UserInfoScreen
 import com.example.talevoice.ui.TaleListScreen
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import java.net.URLDecoder
 
 class MainActivity : ComponentActivity() {
 
@@ -114,18 +116,21 @@ fun MyApp() {
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
                     TaleContentScreen(taleItem)
                 }
-                composable<TaleCreation> { backStackEntry ->
+                /*composable<TaleCreation> { backStackEntry ->
                     canNavigateBack.value = true
-                    val taleCreation: TaleCreation = backStackEntry.toRoute()
-                    currentScreenTitle.value = taleCreation.title // 화면에 따른 제목
-                    TaleCreationScreen(taleCreation)
-                }
-                /*composable("TaleCreationScreen/{title}") { backStackEntry ->
-                    canNavigateBack.value = true
-                    val title = backStackEntry.arguments?.getString("title") ?: "Unknown Tale"
-                    currentScreenTitle.value = title // 화면 제목 업데이트
-                    TaleCreationScreen(navController, title)
+                    val taleCreationItem: TaleCreation = backStackEntry.toRoute()
+                    currentScreenTitle.value = taleCreationItem.title // 화면에 따른 제목
+                    TaleCreationScreen(taleCreationItem)
                 }*/
+                // Json으로 시도
+                composable("TaleCreationScreen/{taleJson}") { backStackEntry ->
+                    canNavigateBack.value = true
+                    val taleJson = backStackEntry.arguments?.getString("taleJson")
+                    val decodedString = URLDecoder.decode(taleJson, "UTF-8")
+                    val taleCreationItem = Json.decodeFromString<TaleCreation>(decodedString)
+                    currentScreenTitle.value = taleCreationItem.title  // 화면 제목 업데이트
+                    TaleCreationScreen(taleCreationItem)
+                }
             }
         }
     )

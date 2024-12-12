@@ -36,6 +36,9 @@ import com.example.talevoice.viewmodel.TaleCreationViewModelFactory
 import com.example.talevoice.viewmodel.TaleListViewModel
 import com.example.talevoice.viewmodel.TaleListViewModelFactory
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.net.URLEncoder
 
 @Composable
 fun TaleListScreen(navController: NavHostController, name: String?, gender: String?) {
@@ -53,16 +56,19 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
 
     // 생성된 동화가 있으면 해당 화면으로 이동
     LaunchedEffect(createdTale) {
-        Log.d("TaleListScreen", "LaunchedEffect!!!!")
+        Log.d("TaleListScreen", "LaunchedEffect!")
         createdTale?.let {
             isLoading = false // 로딩 종료
-            val taleCreation = creationViewModel.getCreatedTaleItem(
-                name = name.orEmpty().ifBlank { "Unknown" },
-                gender = gender.orEmpty().ifBlank { "Unknown" })
-            navController.navigate(taleCreation) {
+           /* val taleCreation = creationViewModel.getCreatedTaleItem()
+            navController.navigate(taleCreation.toString()) {
+                popUpTo<TaleList>()
+            }*/
+            // Json 시도
+            val jsonString = Json.encodeToString(it)
+            val safeJsonString = URLEncoder.encode(jsonString, "UTF-8")
+            navController.navigate("TaleCreationScreen/$safeJsonString") {
                 popUpTo<TaleList>()
             }
-            // createdTale 초기화
             creationViewModel.resetCreatedTale()
         }
     }
@@ -85,7 +91,7 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
                 onClick = {
                     val safeName = name ?: "Unknown"
                     val safeGender = gender ?: "Unknown"
-                    Log.d("TaleListScreen", "Button clicked: name=$safeName, gender=$safeGender")
+                    Log.d("TaleListScreen", "Button clicked")
                     creationViewModel.createTale(safeName, safeGender)
                     isLoading = true // 로딩 시작
                 },

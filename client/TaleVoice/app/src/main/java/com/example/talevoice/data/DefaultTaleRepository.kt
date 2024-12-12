@@ -1,6 +1,5 @@
 package com.example.talevoice.data
 
-import android.util.Log
 import com.example.talevoice.data.source.local.LocalTaleListItem
 import com.example.talevoice.data.source.local.TaleDao
 import com.example.talevoice.data.source.server.NetworkTaleCreationRequest
@@ -61,7 +60,6 @@ class DefaultTaleRepository (
         }
     }
     override suspend fun createTale(name: String, gender: String): TaleCreation {
-        Log.d("TaleRepository", "finally request create tale with name=$name and gender=$gender")
         val request = NetworkTaleCreationRequest(name = name, gender = gender)
         val response = networkApiService.createTale(request)
         try {
