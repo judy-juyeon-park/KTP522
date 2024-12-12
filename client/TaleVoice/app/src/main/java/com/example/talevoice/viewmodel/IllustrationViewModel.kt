@@ -3,12 +3,15 @@ package com.example.talevoice.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.talevoice.TaleList
 import com.example.talevoice.data.IllustPrompt
 import com.example.talevoice.data.TaleIllustration
 import com.example.talevoice.data.TaleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import java.net.URLEncoder
 
 
 class IllustrationViewModel(private val repository: TaleRepository) : ViewModel() {
@@ -22,14 +25,21 @@ class IllustrationViewModel(private val repository: TaleRepository) : ViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    private val _navigateToTaleCreation = MutableStateFlow(false)
+    val navigateToTaleCreation: StateFlow<Boolean> = _navigateToTaleCreation
+
     fun fetchIllustrations(requests: List<IllustPrompt>) {
         _isLoading.value = true
         viewModelScope.launch {
             repository.createIllustrations(requests).collect { illustration ->
                 // 첫 번째 이미지 로드 감지
                 if (_illustrations.value.isEmpty() && !_firstImageLoaded.value) {
-                    Log.d("IllustrationViewModel", "First image loaded: ${_firstImageLoaded.value}")
                     _firstImageLoaded.value = true
+                    Log.d("IllustrationViewModel", "First image loaded: ${_firstImageLoaded.value}")
+
+                    if (!_navigateToTaleCreation.value) {
+                        _navigateToTaleCreation.value = true
+                    }
                 }
                 // 이미지 리스트에 추가
                 _illustrations.value += illustration
@@ -41,5 +51,9 @@ class IllustrationViewModel(private val repository: TaleRepository) : ViewModel(
                 }
             }
         }
+    }
+
+    fun resetNavigationState() {
+        _navigateToTaleCreation.value = false
     }
 }

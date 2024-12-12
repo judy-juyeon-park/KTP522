@@ -58,13 +58,13 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
 
     val taleList by viewModel.taleList.collectAsState()
     var isLoading by remember { mutableStateOf(false) }
-    val createdTale by creationViewModel.createdTale.collectAsState() // 생성된 동화 감지
+    val createdTale by creationViewModel.createdTale.collectAsState()
+    val navigateToTaleCreation by illustrationViewModel.navigateToTaleCreation.collectAsState()
 
     // 생성된 동화가 있으면 동화 삽화 생성 요청
     LaunchedEffect(createdTale) {
-        Log.d("TaleListScreen", "LaunchedEffect!")
+        Log.d("TaleListScreen", "LaunchedEffect by createdTale!")
         createdTale?.let { tale ->
-            // 요청 생성
             val requests = tale.story.mapIndexed { index, text ->
                 IllustPrompt(
                     page = index + 1,
@@ -73,19 +73,24 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
                 )
             }
             illustrationViewModel.fetchIllustrations(requests)
-            /* val taleCreation = creationViewModel.getCreatedTaleItem()
-             navController.navigate(taleCreation.toString()) {
-                 popUpTo<TaleList>()
-             }*/
-            // Json 시도
-            /*val jsonString = Json.encodeToString(tale)
+        }
+    }
+
+    // 첫 번째 삽화 로드 후 화면 출력
+    LaunchedEffect(navigateToTaleCreation) {
+        Log.d("TaleListScreen", "LaunchedEffect by navigateToTaleCreation!")
+        if (navigateToTaleCreation) {
+            val tale = creationViewModel.getCreatedTaleItem()
+            Log.d("TaleListScreen", tale.toString())
+            val jsonString = Json.encodeToString(tale)
             val safeJsonString = URLEncoder.encode(jsonString, "UTF-8")
             navController.navigate("TaleCreationScreen/$safeJsonString") {
                 popUpTo<TaleList>()
             }
 
             isLoading = false
-            creationViewModel.resetCreatedTale()*/
+            creationViewModel.resetCreatedTale()
+            illustrationViewModel.resetNavigationState()
         }
     }
 
