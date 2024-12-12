@@ -34,7 +34,7 @@ import com.example.talevoice.TaleList
 import com.example.talevoice.data.IllustPrompt
 import com.example.talevoice.viewmodel.IllustrationViewModel
 import com.example.talevoice.viewmodel.IllustrationViewModelFactory
-import com.example.talevoice.viewmodel.TaleCreationViewModel
+import com.example.talevoice.viewmodel.TaleStoryViewModel
 import com.example.talevoice.viewmodel.TaleCreationViewModelFactory
 import com.example.talevoice.viewmodel.TaleListViewModel
 import com.example.talevoice.viewmodel.TaleListViewModelFactory
@@ -49,7 +49,7 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
     val viewModel: TaleListViewModel = viewModel(
         factory = TaleListViewModelFactory(repository)
     )
-    val creationViewModel: TaleCreationViewModel = viewModel(
+    val creationViewModel: TaleStoryViewModel = viewModel(
         factory = TaleCreationViewModelFactory(repository)
     )
     val illustrationViewModel: IllustrationViewModel = viewModel(

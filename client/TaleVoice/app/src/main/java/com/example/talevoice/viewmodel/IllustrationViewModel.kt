@@ -3,7 +3,6 @@ package com.example.talevoice.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.talevoice.TaleList
 import com.example.talevoice.data.IllustPrompt
 import com.example.talevoice.data.TaleIllustration
 import com.example.talevoice.data.TaleRepository

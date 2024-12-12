@@ -31,7 +31,7 @@ class TaleCreationViewModelFactory(
     private val repository: TaleRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return TaleCreationViewModel(repository) as T
+        return TaleStoryViewModel(repository) as T
     }
 }
 

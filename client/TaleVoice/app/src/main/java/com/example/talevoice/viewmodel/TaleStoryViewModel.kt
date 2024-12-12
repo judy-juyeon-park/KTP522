@@ -1,18 +1,15 @@
 package com.example.talevoice.viewmodel
 
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.talevoice.TaleApplication
 import com.example.talevoice.data.TaleStory
 import com.example.talevoice.data.TaleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class TaleCreationViewModel(private val repository: TaleRepository) : ViewModel() {
+class TaleStoryViewModel(private val repository: TaleRepository) : ViewModel() {
 
     private val _isCreatingTale = MutableStateFlow(false) // 로딩 상태
     val isCreatingTale: StateFlow<Boolean> = _isCreatingTale
