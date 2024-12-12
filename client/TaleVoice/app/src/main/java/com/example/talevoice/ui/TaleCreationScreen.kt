@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,84 +34,92 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil3.compose.AsyncImage
 import com.example.talevoice.TaleApplication
 import com.example.talevoice.data.TaleCreation
+import com.example.talevoice.data.TaleIllustration
 import com.example.talevoice.viewmodel.IllustrationViewModel
 import com.example.talevoice.viewmodel.IllustrationViewModelFactory
 
 
 @Composable
 fun TaleCreationScreen(navController: NavHostController, taleCreation: TaleCreation) {
-    Log.d("TaleCreationScreen", taleCreation.toString())
 
+    Log.d("TaleCreationScreen", "TaleCreationScreen called!!!!!")
     val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
     val illustrationViewModel: IllustrationViewModel = viewModel(
         factory = IllustrationViewModelFactory(repository)
     )
 
+    // TODO
     val illustrations by illustrationViewModel.illustrations.collectAsState()
-    val isLoading by illustrationViewModel.isLoading.collectAsState()
+    val firstImageLoaded by illustrationViewModel.firstImageLoaded.collectAsState()
 
-    val context = LocalContext.current
-    val firstImageLoaded = illustrationViewModel.firstImageLoaded.collectAsState()
+    LaunchedEffect(Unit) {
+        Log.d("IllustrationViewModel", "Initial illustrations: ${illustrations}")
+        Log.d("IllustrationViewModel", "Initial firstImageLoaded: ${firstImageLoaded}")
+    }
 
- /*   // Observe the first image
-    LaunchedEffect(illustrations) {
-        if (illustrations.isNotEmpty() && !firstImageLoaded.value) {
-            firstImageLoaded.value = true
-        }
-    }*/
+    Log.d("TaleCreationScreen", "Illustrations: $illustrations")
+    Log.d("TaleCreationScreen", "FirstImageLoaded: $firstImageLoaded.value")
 
-    if (!firstImageLoaded.value) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    if (!firstImageLoaded) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             CircularProgressIndicator()
         }
         return
     }
+    Log.d("TaleCreationScreen", "111")
 
+    // Pager를 사용해 동화 스토리와 삽화를 함께 표시
     val pagerState = rememberPagerState(pageCount = { taleCreation.story.size })
 
     Box(Modifier.fillMaxSize()) {
-
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            // Our page content
             Box(
                 Modifier.fillMaxSize(),
                 contentAlignment = Alignment.TopCenter
             ) {
-                Column {
-                    /*Box(
-                        Modifier
-                            .fillMaxWidth(0.6f)
-                            .aspectRatio(1.0f)
-                            .padding(15.dp)
-                            .align(Alignment.CenterHorizontally)
-                    ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // 삽화 이미지 표시
+                    illustrations.find { it.page == page + 1 }?.let { illustration ->
+                        Log.d("TaleCreationScreen", "Page: ${page + 1}")
+                        Log.d("TaleCreationScreen", "Illustration URL: ${illustration.image}")
                         AsyncImage(
-                            model = taleCreation.image[page],
-                            contentDescription = "Image",
-                            error = painterResource(R.drawable.placeholder),
-                            placeholder = painterResource(R.drawable.placeholder),
+                            model = illustration.image, // 로컬 이미지 경로 사용
+                            contentDescription = "Illustration for Page ${page + 1}",
                             modifier = Modifier
-                                .fillMaxWidth()
-                        )
-                    }*/
-                    Box(Modifier.fillMaxWidth(0.9f)) {
-                        Text(
-                            text = taleCreation.story[page],
-                            fontFamily = FontFamily.Serif,
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Center
+                                .fillMaxWidth(0.8f)
+                                .aspectRatio(1.0f)
+                                .padding(16.dp)
                         )
                     }
 
+                    // 동화 스토리 표시
+                    Text(
+                        text = taleCreation.story[page],
+                        fontFamily = FontFamily.Serif,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
                 }
-
             }
         }
+
+        // Page Indicator
         Row(
             Modifier
                 .wrapContentHeight()

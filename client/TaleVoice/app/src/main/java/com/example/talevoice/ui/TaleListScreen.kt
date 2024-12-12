@@ -56,8 +56,8 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
         factory = IllustrationViewModelFactory(repository)
     )
 
-    val taleList by viewModel.taleList.collectAsState()
     var isLoading by remember { mutableStateOf(false) }
+    val taleList by viewModel.taleList.collectAsState()
     val createdTale by creationViewModel.createdTale.collectAsState()
     val navigateToTaleCreation by illustrationViewModel.navigateToTaleCreation.collectAsState()
 
@@ -81,7 +81,6 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
         Log.d("TaleListScreen", "LaunchedEffect by navigateToTaleCreation!")
         if (navigateToTaleCreation) {
             val tale = creationViewModel.getCreatedTaleItem()
-            Log.d("TaleListScreen", tale.toString())
             val jsonString = Json.encodeToString(tale)
             val safeJsonString = URLEncoder.encode(jsonString, "UTF-8")
             navController.navigate("TaleCreationScreen/$safeJsonString") {
