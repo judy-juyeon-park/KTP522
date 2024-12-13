@@ -17,9 +17,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -51,15 +54,47 @@ import com.example.talevoice.TaleApplication
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.viewmodel.TaleDetailViewModel
 import com.example.talevoice.viewmodel.TaleDetailViewModelFactory
+import com.example.talevoice.viewmodel.TaleIllustrationViewModel
 
 
 @Composable
-fun TaleContentScreen(taleItem: TaleItem) {
+fun TaleContentTopBarActions(taleItem: TaleItem) {
+    Log.d("TaleContentTopBarActions", "TaleContentTopBarActions called")
+
+    val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
+    val ttsApiService = (LocalContext.current.applicationContext as TaleApplication).ttsApiService
+
+    val viewModel: TaleDetailViewModel = viewModel(
+        factory = TaleDetailViewModelFactory(repository, ttsApiService, taleItem)
+    )
+
+    var isLiked by remember { mutableStateOf(false) }
+
+    IconButton(
+        onClick = {
+            isLiked = true
+            // call API to send feedback
+            viewModel.sendFeedback(taleItem)
+        },
+        enabled = !isLiked
+    ) {
+        Icon(
+            imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
+            contentDescription = if (isLiked) "Unlike" else "Like"
+        )
+    }
+}
+
+
+@Composable
+fun TaleContentScreen(taleItem: TaleItem, taleIllustrationViewModel: TaleIllustrationViewModel) {
     Log.d("TaleContentScreen", taleItem.toString())
 
+    val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
     val ttsApiService = (LocalContext.current.applicationContext as TaleApplication).ttsApiService
+
     val viewModel: TaleDetailViewModel = viewModel(
-        factory = TaleDetailViewModelFactory(ttsApiService, taleItem)
+        factory = TaleDetailViewModelFactory(repository, ttsApiService, taleItem)
     )
 
     val pageResults by viewModel.pageResults.collectAsState()
@@ -68,18 +103,19 @@ fun TaleContentScreen(taleItem: TaleItem) {
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build()
     }
-    var isPlayingAudio by remember {
-        mutableStateOf(false)
-    }
+    var isPlayingAudio by remember { mutableStateOf(false) }
 
     val pagerState = rememberPagerState(pageCount = {
         taleItem.context.size
     })
 
+    val imageUrls = taleIllustrationViewModel.imageUrls.collectAsState()
+
     LaunchedEffect(Unit) {
         Log.d("TaleContentScreen", "launchEffect on TaleContentScreen")
         viewModel.cleatData()
         viewModel.fetchSpeech(context.applicationContext)
+        taleIllustrationViewModel.updateImageUrls(taleItem)
     }
 
     DisposableEffect(Unit) {
@@ -91,6 +127,7 @@ fun TaleContentScreen(taleItem: TaleItem) {
         exoPlayer.addListener(listener)
 
         onDispose {
+            taleIllustrationViewModel.cancelCreateIllustrations()
             exoPlayer.removeListener(listener)
             exoPlayer.release()
         }
@@ -101,7 +138,6 @@ fun TaleContentScreen(taleItem: TaleItem) {
     }
 
     Box(Modifier.fillMaxSize()) {
-
 
         HorizontalPager(
             state = pagerState,
@@ -121,7 +157,11 @@ fun TaleContentScreen(taleItem: TaleItem) {
                             .align(Alignment.CenterHorizontally)
                     ) {
                         AsyncImage(
-                            model = taleItem.image[page],
+                            model = if (imageUrls.value.isNotEmpty() && page < imageUrls.value.size) {
+                                imageUrls.value[page]
+                            } else {
+                                R.drawable.placeholder
+                            },
                             contentDescription = "Image",
                             error = painterResource(R.drawable.placeholder),
                             placeholder = painterResource(R.drawable.placeholder),
