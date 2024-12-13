@@ -109,11 +109,26 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
 
             Button(
                 onClick = {
-                    val safeName = name ?: "Unknown"
-                    val safeGender = gender ?: "Unknown"
-                    Log.d("TaleListScreen", "Button clicked")
-                    creationViewModel.createTale(safeName, safeGender)
                     isLoading = true // 로딩 시작
+                    Log.d("TaleListScreen", "Button clicked")
+
+                    viewModel.viewModelScope.launch {
+                        try {
+                            val safeName = name ?: "Unknown"
+                            val safeGender = gender ?: "Unknown"
+                            // 동화 내용 + 삽화 1개 리턴
+                            val taleItem = creationViewModel.createTale(safeName, safeGender)
+                            isLoading = false
+                            navController.navigate(taleItem) {
+                                popUpTo<TaleList>()
+                            }
+                        } catch (e: Exception){
+                            isLoading = false
+                            println("Error fetching tale details: ${e.message}")
+                        }
+                    }
+
+
                 },
                 modifier = Modifier.fillMaxWidth(),
 

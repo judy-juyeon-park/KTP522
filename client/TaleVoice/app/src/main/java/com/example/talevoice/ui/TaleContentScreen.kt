@@ -20,7 +20,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -121,7 +120,11 @@ fun TaleContentScreen(taleItem: TaleItem) {
                             .align(Alignment.CenterHorizontally)
                     ) {
                         AsyncImage(
-                            model = taleItem.image[page],
+                            model = if (taleItem.image.isNotEmpty() && page < taleItem.image.size) {
+                                taleItem.image[page]
+                            } else {
+                                R.drawable.placeholder
+                            },
                             contentDescription = "Image",
                             error = painterResource(R.drawable.placeholder),
                             placeholder = painterResource(R.drawable.placeholder),
