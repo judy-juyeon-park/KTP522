@@ -17,9 +17,12 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -52,6 +55,26 @@ import com.example.talevoice.data.TaleItem
 import com.example.talevoice.viewmodel.TaleDetailViewModel
 import com.example.talevoice.viewmodel.TaleDetailViewModelFactory
 
+@Composable
+fun TaleContentTopBarActions(taleItem: TaleItem) {
+    Log.d("TaleContentTopBarActions", "TaleContentTopBarActions called")
+
+    var isLiked by remember { mutableStateOf(false) }
+
+    IconButton(
+        onClick = {
+            isLiked = true
+            Log.d("TaleContentTopBarActions", "Liked: $isLiked for ${taleItem.title}")
+        },
+        enabled = !isLiked
+    ) {
+        Icon(
+            imageVector = if (isLiked) Icons.Filled.ThumbUp else Icons.Outlined.ThumbUp,
+            contentDescription = if (isLiked) "Unlike" else "Like"
+        )
+    }
+}
+
 
 @Composable
 fun TaleContentScreen(taleItem: TaleItem) {
@@ -68,13 +91,12 @@ fun TaleContentScreen(taleItem: TaleItem) {
     val exoPlayer = remember {
         ExoPlayer.Builder(context).build()
     }
-    var isPlayingAudio by remember {
-        mutableStateOf(false)
-    }
+    var isPlayingAudio by remember { mutableStateOf(false) }
 
     val pagerState = rememberPagerState(pageCount = {
         taleItem.context.size
     })
+
 
     LaunchedEffect(Unit) {
         Log.d("TaleContentScreen", "launchEffect on TaleContentScreen")

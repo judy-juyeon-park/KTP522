@@ -7,8 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,8 +17,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.ui.TaleContentScreen
+import com.example.talevoice.ui.TaleContentTopBarActions
 import com.example.talevoice.ui.UserInfoScreen
 import com.example.talevoice.ui.TaleListScreen
 import kotlinx.serialization.Serializable
@@ -61,10 +62,9 @@ fun MyApp() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val canNavigateBack = remember { mutableStateOf(false)}
 
-    // 좋아요 상태 관리
-    val isLiked = remember { mutableStateOf(false) }
-    // 좋아요 버튼 표시 여부
-    val showLikeButton = remember { mutableStateOf(false) }
+    // 각 화면에서 전달할 actions
+    var topBarActions by remember { mutableStateOf<@Composable (() -> Unit)?>(null) }
+
 
     Log.d("MyAPp", "update!!!")
     Scaffold(
@@ -95,24 +95,7 @@ fun MyApp() {
                     }
                 },
                 actions = {
-                    if (showLikeButton.value) {
-                        IconButton(
-                            onClick = {
-                                isLiked.value = true
-                                Log.d("MyApp", "Liked: ${isLiked.value}")
-                            },
-                            enabled = !isLiked.value
-                        ) {
-                            Icon(
-                                imageVector = if (isLiked.value) {
-                                    Icons.Filled.ThumbUp
-                                } else {
-                                    Icons.Outlined.ThumbUp
-                                },
-                                contentDescription = if (isLiked.value) "Unlike" else "Like"
-                            )
-                        }
-                    }
+                    topBarActions?.invoke()
                 },
                 scrollBehavior = scrollBehavior
             )
@@ -125,14 +108,13 @@ fun MyApp() {
             ) {
                 composable("UserInfoScreen") {
                     canNavigateBack.value = false
-                    showLikeButton.value = false // 좋아요 버튼 숨기기
+                    topBarActions = null // actions 비우기
                     currentScreenTitle.value = "TaleVoice" // 화면에 따른 제목
                     UserInfoScreen(navController)
                 }
                 composable("TaleList/{name}/{gender}") { backStackEntry ->
                     canNavigateBack.value = true
-                    showLikeButton.value = false // 좋아요 버튼 숨기기
-                    isLiked.value = false // 좋아요 버튼 초기화
+                    topBarActions = null // actions 비우기
                     val name = backStackEntry.arguments?.getString("name")
                     val gender = backStackEntry.arguments?.getString("gender")
                     currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
@@ -140,9 +122,12 @@ fun MyApp() {
                 }
                 composable<TaleItem> { backStackEntry ->
                     canNavigateBack.value = true
-                    showLikeButton.value = true // 좋아요 버튼 표
                     val taleItem: TaleItem = backStackEntry.toRoute()
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
+                    Log.d("MyApp", "Setting topBarActions for TaleContentScreen")
+                    topBarActions = {
+                        TaleContentTopBarActions(taleItem)
+                    }
                     TaleContentScreen(taleItem)
                 }
             }

@@ -77,6 +77,4 @@ class TaleDetailViewModel(private val ttsApiService: TTSApiService, private  val
             null
         }
     }
-
-
 }
