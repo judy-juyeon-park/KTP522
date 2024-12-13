@@ -1,6 +1,7 @@
 package com.example.talevoice.ui
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,7 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.example.talevoice.R
 import com.example.talevoice.TaleApplication
 import com.example.talevoice.data.TaleItem
@@ -156,17 +157,30 @@ fun TaleContentScreen(taleItem: TaleItem, taleIllustrationViewModel: TaleIllustr
                             .padding(15.dp)
                             .align(Alignment.CenterHorizontally)
                     ) {
-                        AsyncImage(
+                        SubcomposeAsyncImage(
                             model = if (imageUrls.value.isNotEmpty() && page < imageUrls.value.size) {
                                 imageUrls.value[page]
                             } else {
                                 R.drawable.placeholder
                             },
-                            contentDescription = "Image",
-                            error = painterResource(R.drawable.placeholder),
-                            placeholder = painterResource(R.drawable.placeholder),
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            modifier = Modifier.fillMaxSize(),
+                            loading = {
+                                Box(
+                                    Modifier
+                                        .fillMaxWidth(0.6f)
+                                ) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.align(Alignment.Center)
+                                    )
+                                }
+                            },
+                            error = {
+                                Image(
+                                    painter = painterResource(R.drawable.placeholder),
+                                    contentDescription = "placeholder"
+                                )
+                            },
+                            contentDescription = "Image"
                         )
                     }
                     Box(Modifier.fillMaxWidth(0.9f)) {
