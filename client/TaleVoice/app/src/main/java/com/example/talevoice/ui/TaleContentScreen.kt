@@ -56,16 +56,25 @@ import com.example.talevoice.viewmodel.TaleDetailViewModel
 import com.example.talevoice.viewmodel.TaleDetailViewModelFactory
 import com.example.talevoice.viewmodel.TaleIllustrationViewModel
 
+
 @Composable
 fun TaleContentTopBarActions(taleItem: TaleItem) {
     Log.d("TaleContentTopBarActions", "TaleContentTopBarActions called")
+
+    val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
+    val ttsApiService = (LocalContext.current.applicationContext as TaleApplication).ttsApiService
+
+    val viewModel: TaleDetailViewModel = viewModel(
+        factory = TaleDetailViewModelFactory(repository, ttsApiService, taleItem)
+    )
 
     var isLiked by remember { mutableStateOf(false) }
 
     IconButton(
         onClick = {
             isLiked = true
-            Log.d("TaleContentTopBarActions", "Liked: $isLiked for ${taleItem.title}")
+            // call API to send feedback
+            viewModel.sendFeedback(taleItem)
         },
         enabled = !isLiked
     ) {
@@ -81,9 +90,11 @@ fun TaleContentTopBarActions(taleItem: TaleItem) {
 fun TaleContentScreen(taleItem: TaleItem, taleIllustrationViewModel: TaleIllustrationViewModel) {
     Log.d("TaleContentScreen", taleItem.toString())
 
+    val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
     val ttsApiService = (LocalContext.current.applicationContext as TaleApplication).ttsApiService
+
     val viewModel: TaleDetailViewModel = viewModel(
-        factory = TaleDetailViewModelFactory(ttsApiService, taleItem)
+        factory = TaleDetailViewModelFactory(repository, ttsApiService, taleItem)
     )
 
     val pageResults by viewModel.pageResults.collectAsState()
