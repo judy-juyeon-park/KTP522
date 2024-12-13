@@ -9,13 +9,11 @@ node Client{
     component TaleListViewModel
     component TaleDetailViewModel
     component UserInfoViewModel
-    component TaleStoryViewModel
     component TaleIllustrationViewModel
 
     component TaleListView
     component TaleDetailView
     component UserInfoView
-    component TaleCreationView
 
     component ClientDB
 }
@@ -71,12 +69,8 @@ TaleDetailViewModel ..> TaleRepository
 TaleListViewModel ..> TaleListView
 TaleDetailViewModel ..> TaleDetailView
 
-TaleStoryViewModel ..> TaleRepository
-TaleStoryViewModel ..> TaleCreationView
-TaleStoryViewModel ..> TTSApiService
-
 TaleIllustrationViewModel ..> TaleRepository
-TaleIllustrationViewModel ..> TaleCreationView
+TaleIllustrationViewModel ..> TaleDetailView
 
 UserInfoViewModel ..> UserInfoView
 
