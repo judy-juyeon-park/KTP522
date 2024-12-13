@@ -81,7 +81,7 @@ fun TaleListScreen(
                         fontWeight = FontWeight.Thin,
                         color = Color.White,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp, bottom = 15.dp)
                     )
                     LinearProgressIndicator(
                         modifier = Modifier

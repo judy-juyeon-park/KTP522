@@ -39,12 +39,15 @@ import com.example.talevoice.viewmodel.TaleIllustrationViewModelFactory
 import kotlinx.serialization.Serializable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.core.view.WindowCompat
 
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             MyApp((applicationContext as TaleApplication).taleRepository)
         }
@@ -86,7 +89,7 @@ fun MyApp(repository: TaleRepository) {
                         currentScreenTitle.value,
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = if (currentScreenTitle.value.length > 10) 30.sp else 45.sp,
+                        fontSize = if (currentScreenTitle.value.length > 8) 30.sp else 45.sp,
                     )
                 },
                 navigationIcon = {

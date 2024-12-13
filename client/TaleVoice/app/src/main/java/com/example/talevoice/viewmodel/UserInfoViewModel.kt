@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 class UserInfoViewModel : ViewModel() {
 
     var name by mutableStateOf("")
-    var gender by mutableStateOf("")
+    var gender by mutableStateOf("남성")
 
     // Callback for when name or gender changes
     var onChanged: ((String, String) -> Unit)? = null
