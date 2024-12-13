@@ -278,23 +278,9 @@ router.get('/list', async(req, res, next)=>{
 /* GET tales content */
 router.get('/content/:id', async (req, res, next)=>{
     try{
-        const reqID = req.params.id;
-        if(!reqID ){ 
-            res.json({
-                code : 400,
-                message: "동화 id를 입력하세요."
-            });
-        return;
-        }   
-
-        const result = await tale.findOne({_id:reqID})
-        if(!result){
-            res.json({
-                code : 400,
-                message: "올바른 동화 id를 입력하세요."
-            })
-            return;
-        }else{
+        try{
+            const reqID = req.params.id;
+            const result = await tale.findOne({_id:reqID});
             res.json({
                 code: 200,
                 message: "동화 내용을 조회했습니다.",
@@ -306,8 +292,14 @@ router.get('/content/:id', async (req, res, next)=>{
                 }
             })
             return;
+        }catch(err){
+            res.json({
+                code : 400,
+                message: "올바른 동화 id를 입력하세요."
+            })
+            return;
         }
-
+        
     }catch (err) { 
         if(err){
             console.log(err);

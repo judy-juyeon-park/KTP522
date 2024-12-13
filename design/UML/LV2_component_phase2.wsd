@@ -1,0 +1,96 @@
+@startuml lv2_component
+
+node Client{
+
+    component TaleRepository
+    component TaleApiService
+    component TTSApiService
+
+    component TaleListViewModel
+    component TaleDetailViewModel
+    component UserInfoViewModel
+    component TaleStoryViewModel
+    component TaleIllustrationViewModel
+
+    component TaleListView
+    component TaleDetailView
+    component UserInfoView
+    component TaleCreationView
+
+    component ClientDB
+}
+
+
+
+node Server {
+    component Router
+    component TaleController
+    component TaleAIController
+    component TaleModel
+    component TaleLogModel
+    component ServerDB
+}
+
+node TTS3rdParty {
+    component TTSCloudService
+}
+
+node ChatGPT3rfParty {
+    component ChatGPTAPIService
+}
+
+interface TaleListInterface
+interface TaleDetailInterface
+interface TaleLogInterface
+interface TTSInterface
+
+interface GenerateStoryInterface
+interface GenerateIllustInterface
+
+
+Router ..> TaleController
+TaleController ..> TaleModel
+TaleModel ..> ServerDB
+
+Router ..> TaleAIController
+TaleAIController ..> TaleLogModel
+TaleLogModel ..> ServerDB
+
+TaleAIController --> GenerateStoryInterface : requires
+TaleAIController --> GenerateIllustInterface : requires
+GenerateStoryInterface ..> ChatGPTAPIService : provided
+GenerateIllustInterface ..> ChatGPTAPIService : provided
+
+TaleRepository ..> ClientDB
+TaleRepository ..> TaleApiService
+TaleDetailViewModel ..> TTSApiService
+
+TaleListViewModel ..> TaleRepository
+TaleDetailViewModel ..> TaleRepository
+
+TaleListViewModel ..> TaleListView
+TaleDetailViewModel ..> TaleDetailView
+
+TaleStoryViewModel ..> TaleRepository
+TaleStoryViewModel ..> TaleCreationView
+TaleStoryViewModel ..> TTSApiService
+
+TaleIllustrationViewModel ..> TaleRepository
+TaleIllustrationViewModel ..> TaleCreationView
+
+UserInfoViewModel ..> UserInfoView
+
+TTSInterface ..> TTSCloudService : provided
+TTSApiService --> TTSInterface : requires
+
+TaleListInterface ..> Router : provided
+TaleDetailInterface ..> Router : provided
+TaleLogInterface ..> Router : provided
+TaleApiService --> TaleListInterface : requires
+TaleApiService --> TaleDetailInterface : requires
+TaleApiService --> TaleLogInterface : requires
+
+
+@enduml
+
+

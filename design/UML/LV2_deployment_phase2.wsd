@@ -23,11 +23,17 @@ node TTSCloudeService {
     }
 }
 
+node ChatGPTAPIService {
+  node "<<thirdparty>>\nEChatGPTAPIService" as gpt {
+    
+    }
+}
 node "ImageServer" as img
 
 
 cio <--> sproc
 cio <--> tts
 cio <--> img
+sproc <--> gpt
 
 @enduml
