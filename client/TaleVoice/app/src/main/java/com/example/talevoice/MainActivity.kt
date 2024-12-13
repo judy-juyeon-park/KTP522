@@ -67,7 +67,7 @@ fun MyApp(repository: TaleRepository) {
     // 현재 경로에 따른 제목 결정
     val currentScreenTitle = remember { mutableStateOf("Tale List") }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val canNavigateBack = remember { mutableStateOf(false)}
+    val canNavigateBack = remember { mutableStateOf(false) }
 
     // 각 화면에서 전달할 actions
     var topBarActions by remember { mutableStateOf<@Composable (() -> Unit)?>(null) }
@@ -90,7 +90,7 @@ fun MyApp(repository: TaleRepository) {
                     )
                 },
                 navigationIcon = {
-                    if (canNavigateBack.value){
+                    if (canNavigateBack.value) {
                         IconButton(onClick = {
                             navController.popBackStack()
                         }) {
@@ -132,9 +132,14 @@ fun MyApp(repository: TaleRepository) {
                     val taleItem: TaleItem = backStackEntry.toRoute()
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
                     Log.d("MyApp", "Setting topBarActions for TaleContentScreen")
-                    topBarActions = {
-                        TaleContentTopBarActions(taleItem)
+                    topBarActions = if (taleItem.image.isNotEmpty()) {
+                        null
+                    } else {
+                        {
+                            TaleContentTopBarActions(taleItem)
+                        }
                     }
+
                     TaleContentScreen(taleItem, illustrationViewModel)
                 }
             }
