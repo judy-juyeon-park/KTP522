@@ -17,24 +17,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.talevoice.data.TaleItem
+import com.example.talevoice.data.TaleRepository
 import com.example.talevoice.ui.TaleContentScreen
 import com.example.talevoice.ui.TaleContentTopBarActions
 import com.example.talevoice.ui.UserInfoScreen
 import com.example.talevoice.ui.TaleListScreen
+import com.example.talevoice.viewmodel.TaleIllustrationViewModel
+import com.example.talevoice.viewmodel.TaleIllustrationViewModelFactory
 import kotlinx.serialization.Serializable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 
 
 class MainActivity : ComponentActivity() {
@@ -42,7 +46,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApp()
+            MyApp((applicationContext as TaleApplication).taleRepository)
         }
     }
 }
@@ -53,9 +57,12 @@ object TaleList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp() {
+fun MyApp(repository: TaleRepository) {
 
     val navController = rememberNavController()
+    val illustrationViewModel: TaleIllustrationViewModel = viewModel(
+        factory = TaleIllustrationViewModelFactory(repository)
+    )
 
     // 현재 경로에 따른 제목 결정
     val currentScreenTitle = remember { mutableStateOf("Tale List") }
@@ -118,7 +125,7 @@ fun MyApp() {
                     val name = backStackEntry.arguments?.getString("name")
                     val gender = backStackEntry.arguments?.getString("gender")
                     currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
-                    TaleListScreen(navController, name, gender)
+                    TaleListScreen(navController, illustrationViewModel, name, gender)
                 }
                 composable<TaleItem> { backStackEntry ->
                     canNavigateBack.value = true
@@ -128,7 +135,7 @@ fun MyApp() {
                     topBarActions = {
                         TaleContentTopBarActions(taleItem)
                     }
-                    TaleContentScreen(taleItem)
+                    TaleContentScreen(taleItem, illustrationViewModel)
                 }
             }
         }

@@ -27,15 +27,6 @@ class TaleDetailViewModelFactory(
 }
 
 @Suppress("UNCHECKED_CAST")
-class TaleCreationViewModelFactory(
-    private val repository: TaleRepository
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return TaleStoryViewModel(repository) as T
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
 class TaleIllustrationViewModelFactory(
     private val repository: TaleRepository
 ) : ViewModelProvider.Factory {

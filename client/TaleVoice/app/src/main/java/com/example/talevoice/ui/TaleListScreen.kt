@@ -15,7 +15,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,67 +30,24 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.talevoice.TaleApplication
 import com.example.talevoice.TaleList
-import com.example.talevoice.data.IllustPrompt
 import com.example.talevoice.viewmodel.TaleIllustrationViewModel
-import com.example.talevoice.viewmodel.TaleStoryViewModel
-import com.example.talevoice.viewmodel.TaleCreationViewModelFactory
-import com.example.talevoice.viewmodel.TaleIllustrationViewModelFactory
 import com.example.talevoice.viewmodel.TaleListViewModel
 import com.example.talevoice.viewmodel.TaleListViewModelFactory
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.net.URLEncoder
 
 @Composable
-fun TaleListScreen(navController: NavHostController, name: String?, gender: String?) {
+fun TaleListScreen(navController: NavHostController, taleIllustrationViewModel: TaleIllustrationViewModel, name: String?, gender: String?) {
     val repository = (LocalContext.current.applicationContext as TaleApplication).taleRepository
     val viewModel: TaleListViewModel = viewModel(
         factory = TaleListViewModelFactory(repository)
     )
-    val creationViewModel: TaleStoryViewModel = viewModel(
-        factory = TaleCreationViewModelFactory(repository)
-    )
-    val taleIllustrationViewModel: TaleIllustrationViewModel = viewModel(
-        factory = TaleIllustrationViewModelFactory(repository)
-    )
 
     var isLoading by remember { mutableStateOf(false) }
     val taleList by viewModel.taleList.collectAsState()
-    val createdTale by creationViewModel.createdTale.collectAsState()
-    val navigateToTaleCreation by taleIllustrationViewModel.navigateToTaleCreation.collectAsState()
 
-    // 생성된 동화가 있으면 동화 삽화 생성 요청
-    LaunchedEffect(createdTale) {
-        Log.d("TaleListScreen", "LaunchedEffect by createdTale!")
-        createdTale?.let { tale ->
-            val requests = tale.story.mapIndexed { index, text ->
-                IllustPrompt(
-                    page = index + 1,
-                    paragraph = text,
-                    gender = gender.toString()
-                )
-            }
-            taleIllustrationViewModel.fetchIllustrations(requests)
-        }
-    }
-
-    // 첫 번째 삽화 로드 후 화면 출력
-    LaunchedEffect(navigateToTaleCreation) {
-        Log.d("TaleListScreen", "LaunchedEffect by navigateToTaleCreation!")
-        if (navigateToTaleCreation) {
-            val tale = creationViewModel.getCreatedTaleItem()
-            val jsonString = Json.encodeToString(tale)
-            val safeJsonString = URLEncoder.encode(jsonString, "UTF-8")
-            navController.navigate("TaleCreationScreen/$safeJsonString") {
-                popUpTo<TaleList>()
-            }
-
-            isLoading = false
-            creationViewModel.resetCreatedTale()
-            taleIllustrationViewModel.resetNavigationState()
-        }
-    }
 
     Column {
         Column(
@@ -114,20 +70,27 @@ fun TaleListScreen(navController: NavHostController, name: String?, gender: Stri
 
                     viewModel.viewModelScope.launch {
                         try {
+                            isLoading = true
                             val safeName = name ?: "Unknown"
                             val safeGender = gender ?: "Unknown"
                             // 동화 내용 + 삽화 1개 리턴
-                            val taleItem = creationViewModel.createTale(safeName, safeGender)
+                            val taleItem = viewModel.createTale(safeName, safeGender)
+                            val prompts =  taleIllustrationViewModel.getIllustPrompts(taleItem, safeGender)
+                            Log.d("TaleListScreen", "prompts ready")
+                            taleIllustrationViewModel.fetchIllustrations(prompts)
+                            taleIllustrationViewModel.illustrations.first { it.isNotEmpty() }
+                            Log.d("TaleListScreen", "one image ready ready")
+
                             isLoading = false
                             navController.navigate(taleItem) {
                                 popUpTo<TaleList>()
                             }
+
                         } catch (e: Exception){
                             isLoading = false
                             println("Error fetching tale details: ${e.message}")
                         }
                     }
-
 
                 },
                 modifier = Modifier.fillMaxWidth(),

@@ -54,6 +54,7 @@ import com.example.talevoice.TaleApplication
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.viewmodel.TaleDetailViewModel
 import com.example.talevoice.viewmodel.TaleDetailViewModelFactory
+import com.example.talevoice.viewmodel.TaleIllustrationViewModel
 
 @Composable
 fun TaleContentTopBarActions(taleItem: TaleItem) {
@@ -77,7 +78,7 @@ fun TaleContentTopBarActions(taleItem: TaleItem) {
 
 
 @Composable
-fun TaleContentScreen(taleItem: TaleItem) {
+fun TaleContentScreen(taleItem: TaleItem, taleIllustrationViewModel: TaleIllustrationViewModel) {
     Log.d("TaleContentScreen", taleItem.toString())
 
     val ttsApiService = (LocalContext.current.applicationContext as TaleApplication).ttsApiService
@@ -97,11 +98,13 @@ fun TaleContentScreen(taleItem: TaleItem) {
         taleItem.context.size
     })
 
+    val imageUrls = taleIllustrationViewModel.imageUrls.collectAsState()
 
     LaunchedEffect(Unit) {
         Log.d("TaleContentScreen", "launchEffect on TaleContentScreen")
         viewModel.cleatData()
         viewModel.fetchSpeech(context.applicationContext)
+        taleIllustrationViewModel.updateImageUrls(taleItem)
     }
 
     DisposableEffect(Unit) {
@@ -142,8 +145,8 @@ fun TaleContentScreen(taleItem: TaleItem) {
                             .align(Alignment.CenterHorizontally)
                     ) {
                         AsyncImage(
-                            model = if (taleItem.image.isNotEmpty() && page < taleItem.image.size) {
-                                taleItem.image[page]
+                            model = if (imageUrls.value.isNotEmpty() && page < imageUrls.value.size) {
+                                imageUrls.value[page]
                             } else {
                                 R.drawable.placeholder
                             },
