@@ -2,10 +2,15 @@ package com.example.talevoice.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.talevoice.data.TaleItem
+import com.example.talevoice.data.TaleRepository
+import com.example.talevoice.data.TaleStory
 import com.example.talevoice.data.source.server.SSMLRequest
 import com.example.talevoice.data.source.server.SSMLVoice
 import com.example.talevoice.data.source.server.TTSApiService
@@ -19,7 +24,11 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 
-class TaleDetailViewModel(private val ttsApiService: TTSApiService, private  val taleItem: TaleItem) : ViewModel() {
+class TaleDetailViewModel(
+    private val repository: TaleRepository,
+    private val ttsApiService: TTSApiService,
+    private  val taleItem: TaleItem
+) : ViewModel() {
 
     private val _pageResults = MutableStateFlow<Map<Int, Uri>>(emptyMap())
     val pageResults: StateFlow<Map<Int, Uri>> = _pageResults
@@ -76,5 +85,29 @@ class TaleDetailViewModel(private val ttsApiService: TTSApiService, private  val
             e.printStackTrace()
             null
         }
+    }
+
+    private val _isLiked = mutableStateOf(false)
+    val isLiked: State<Boolean> get() = _isLiked
+
+    fun sendFeedback(taleItem: TaleItem) {
+        viewModelScope.launch {
+            try {
+                if (!_isLiked.value) {
+                    val taleStory = convertToTaleStory(taleItem)
+                    repository.sendFeedback(taleStory) // API 호출
+                    _isLiked.value = true // 상태 업데이트
+                }
+            } catch (e: Exception) {
+                Log.e("TaleDetailViewModel", "Error sending like feedback", e)
+            }
+        }
+    }
+
+    private fun convertToTaleStory(taleItem: TaleItem): TaleStory {
+        return TaleStory(
+            title = taleItem.title,
+            story = taleItem.context
+        )
     }
 }

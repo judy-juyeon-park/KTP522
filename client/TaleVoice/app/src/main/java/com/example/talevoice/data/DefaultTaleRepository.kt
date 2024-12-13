@@ -94,6 +94,7 @@ class DefaultTaleRepository (
 
     override suspend fun sendFeedback(taleStory: TaleStory) : NetworkFeedbackResponse? {
         Log.d("DefaultTaleRepository", "sendFeedback: $taleStory")
+
         return try {
             val response = networkApiService.sendFeedback(taleStory)
             if (response.isSuccessful) {

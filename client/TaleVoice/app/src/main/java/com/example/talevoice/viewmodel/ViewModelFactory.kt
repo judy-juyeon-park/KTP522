@@ -18,11 +18,12 @@ class TaleListViewModelFactory(
 
 @Suppress("UNCHECKED_CAST")
 class TaleDetailViewModelFactory(
+    private val repository: TaleRepository,
     private val ttsApiService: TTSApiService,
     private val taleItem: TaleItem
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return TaleDetailViewModel(ttsApiService, taleItem) as T
+        return TaleDetailViewModel(repository, ttsApiService, taleItem) as T
     }
 }
 
