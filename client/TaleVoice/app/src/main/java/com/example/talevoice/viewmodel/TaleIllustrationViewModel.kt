@@ -7,10 +7,12 @@ import com.example.talevoice.data.IllustPrompt
 import com.example.talevoice.data.TaleIllustration
 import com.example.talevoice.data.TaleItem
 import com.example.talevoice.data.TaleRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+
 
 
 class TaleIllustrationViewModel(private val repository: TaleRepository) : ViewModel() {
@@ -20,6 +22,7 @@ class TaleIllustrationViewModel(private val repository: TaleRepository) : ViewMo
 
     private val _imageUrls = MutableStateFlow<List<String>>(emptyList())
     val imageUrls: StateFlow<List<String>> = _imageUrls
+    private var currentJob: Job? = null
 
     fun updateImageUrls(taleItem: TaleItem) {
         viewModelScope.launch {
@@ -45,10 +48,12 @@ class TaleIllustrationViewModel(private val repository: TaleRepository) : ViewMo
     }
 
     suspend fun fetchIllustrations(requests: List<IllustPrompt>) {
+        currentJob?.cancel()
+
         _illustrations.emit(emptyList())
         Log.d("TaleIllustrationViewModel", "fetchIllustrations")
 
-        viewModelScope.launch {
+        currentJob = viewModelScope.launch {
             repository.createIllustrations(requests)
                 .onEach { illustration ->
                     Log.d("TaleIllustrationViewModel", "${illustration.page} ${illustration.image}")
@@ -60,6 +65,11 @@ class TaleIllustrationViewModel(private val repository: TaleRepository) : ViewMo
                 }.collect()
         }
 
+    }
+
+    fun cancelCreateIllustrations() {
+        currentJob?.cancel()
+        currentJob = null
     }
 
 

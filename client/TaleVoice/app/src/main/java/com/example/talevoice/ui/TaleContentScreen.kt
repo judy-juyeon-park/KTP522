@@ -116,6 +116,7 @@ fun TaleContentScreen(taleItem: TaleItem, taleIllustrationViewModel: TaleIllustr
         exoPlayer.addListener(listener)
 
         onDispose {
+            taleIllustrationViewModel.cancelCreateIllustrations()
             exoPlayer.removeListener(listener)
             exoPlayer.release()
         }
