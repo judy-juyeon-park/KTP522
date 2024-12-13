@@ -23,9 +23,6 @@ import java.util.concurrent.TimeUnit
 
 class TaleApplication : Application() {
 
-    private val appDispatcher: CoroutineDispatcher = Dispatchers.IO
-    private val appScope: CoroutineScope = CoroutineScope(SupervisorJob() + appDispatcher)
-
     private val database: TaleDatabase by lazy {
         Room.databaseBuilder(
             applicationContext,
@@ -44,42 +41,41 @@ class TaleApplication : Application() {
         super.onCreate()
         Log.d("TaleApplication","tale application on create")
 
-        appScope.launch(appDispatcher) {
 
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
-
-            val okHttpClient = OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS) // 연결 시간 초과 설정
-                .readTimeout(30, TimeUnit.SECONDS) // 읽기 시간 초과 설정
-                .writeTimeout(30, TimeUnit.SECONDS) // 쓰기 시간 초과 설정
-                .addInterceptor(loggingInterceptor)
-                .addInterceptor(RetryInterceptor(3))
-                .build()
-
-            val apiService: TaleApiService = Retrofit.Builder()
-                .baseUrl(BuildConfig.WAS_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(TaleApiService::class.java)
-
-            // Repository 초기화
-            taleRepository = DefaultTaleRepository(
-                localDataSource = database.taleDao(),
-                networkApiService = apiService,
-                dispatcher = Dispatchers.IO
-            )
-
-            ttsApiService = Retrofit.Builder()
-                .baseUrl("https://koreacentral.tts.speech.microsoft.com")
-                .client(okHttpClient)
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build()
-                .create(TTSApiService::class.java)
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
         }
 
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS) // 연결 시간 초과 설정
+            .readTimeout(30, TimeUnit.SECONDS) // 읽기 시간 초과 설정
+            .writeTimeout(30, TimeUnit.SECONDS) // 쓰기 시간 초과 설정
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(RetryInterceptor(3))
+            .build()
+
+        val apiService: TaleApiService = Retrofit.Builder()
+            .baseUrl(BuildConfig.WAS_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(TaleApiService::class.java)
+
+        // Repository 초기화
+        taleRepository = DefaultTaleRepository(
+            localDataSource = database.taleDao(),
+            networkApiService = apiService,
+            dispatcher = Dispatchers.IO
+        )
+
+        ttsApiService = Retrofit.Builder()
+            .baseUrl("https://koreacentral.tts.speech.microsoft.com")
+            .client(okHttpClient)
+            .addConverterFactory(SimpleXmlConverterFactory.create())
+            .build()
+            .create(TTSApiService::class.java)
     }
+
+
 
 }
