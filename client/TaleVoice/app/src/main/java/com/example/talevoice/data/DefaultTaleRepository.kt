@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import com.example.talevoice.data.source.server.NetworkFeedbackResponse as NetworkFeedbackResponse
 
 class DefaultTaleRepository (
     private val localDataSource: TaleDao,
@@ -69,7 +70,7 @@ class DefaultTaleRepository (
                 val networkTaleCreation = response.body()
                 return networkTaleCreation?.data ?: throw IllegalStateException("Response body is null")
             } else {
-                throw Exception("Error creating tale: ${response.errorBody()?.string()}")
+                throw Exception("Failed to create tale: ${response.errorBody()?.string()}")
             }
         } finally {
             response.errorBody()?.close()
@@ -90,4 +91,22 @@ class DefaultTaleRepository (
             }
         }
     }.flowOn(Dispatchers.IO) // Use IO dispatcher for network operations
+
+    override suspend fun sendFeedback(taleStory: TaleStory) : NetworkFeedbackResponse? {
+        Log.d("DefaultTaleRepository", "sendFeedback: $taleStory")
+        return try {
+            val response = networkApiService.sendFeedback(taleStory)
+            if (response.isSuccessful) {
+                Log.d("DefaultTaleRepository", "Feedback sent successfully: ${response.body()}")
+                response.body() // 성공 시 응답 반환
+            } else {
+                // response를 제대로 반환 받지 못해도 문제 없으므로 throw Exception 하지 않음
+                Log.e("DefaultTaleRepository", "Failed to send feedback: ${response.errorBody()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("DefaultTaleRepository", "Error sending feedback", e)
+            null
+        }
+    }
 }

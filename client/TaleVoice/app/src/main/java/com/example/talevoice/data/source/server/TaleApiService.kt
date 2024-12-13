@@ -1,6 +1,7 @@
 package com.example.talevoice.data.source.server
 
 import com.example.talevoice.data.IllustPrompt
+import com.example.talevoice.data.TaleStory
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -24,4 +25,9 @@ interface TaleApiService {
     suspend fun createIllustration(
         @Body request: IllustPrompt
     ): Response<NetworkIllustrationRespond>
+
+    @POST("/api/talesAI/like")
+    suspend fun sendFeedback(
+        @Body request: TaleStory
+    ): Response<NetworkFeedbackResponse>
 }
