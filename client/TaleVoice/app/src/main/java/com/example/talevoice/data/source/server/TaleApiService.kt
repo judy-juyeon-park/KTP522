@@ -19,12 +19,12 @@ interface TaleApiService {
     @POST("/api/talesAI/story")
     suspend fun createTale(
         @Body request: NetworkTaleCreationRequest
-    ): Response<NetworkTaleCreationRespond>
+    ): Response<NetworkTaleCreationResponse>
 
     @POST("/api/talesAI/illust")
     suspend fun createIllustration(
         @Body request: IllustPrompt
-    ): Response<NetworkIllustrationRespond>
+    ): Response<NetworkIllustrationResponse>
 
     @POST("/api/talesAI/like")
     suspend fun sendFeedback(
