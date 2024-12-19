@@ -53,7 +53,7 @@ var talelog = require('../model/talelog');
  */
 
 // 동화 생성
-router.get('/story',async(req, res, next)=>{
+router.post('/story',async(req, res, next)=>{
 
     try{
         const { name, gender }  = req.body;
@@ -153,7 +153,7 @@ router.get('/story',async(req, res, next)=>{
  */
 
 // 삽화 생성
-router.get('/illust',async(req, res, next)=>{
+router.post('/illust',async(req, res, next)=>{
 
     try{
         const { page, paragraph, gender }  = req.body;
