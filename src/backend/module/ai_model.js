@@ -43,9 +43,11 @@ module.exports = {
             }
         );
 
+	console.log("Response Data : \n" + response.data);
         // 생성된 텍스트 추출
         const story = response.data.choices[0].message.content.trim();
-
+	
+	console.log("Story : \n"+story);
         // 제목포함 6문단으로 나누기
         const paragraphs = story.split("\n").filter((p) => p.trim() !== "");
 
