@@ -23,21 +23,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.talevoice.data.TaleItem
+import com.example.talevoice.data.TaleRepository
 import com.example.talevoice.ui.TaleContentScreen
+import com.example.talevoice.ui.TaleContentTopBarActions
+import com.example.talevoice.ui.UserInfoScreen
 import com.example.talevoice.ui.TaleListScreen
+import com.example.talevoice.viewmodel.TaleIllustrationViewModel
+import com.example.talevoice.viewmodel.TaleIllustrationViewModelFactory
 import kotlinx.serialization.Serializable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.core.view.WindowCompat
+
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
-            MyApp()
+            MyApp((applicationContext as TaleApplication).taleRepository)
         }
     }
 }
@@ -48,14 +60,22 @@ object TaleList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp() {
+fun MyApp(repository: TaleRepository) {
 
     val navController = rememberNavController()
+    val illustrationViewModel: TaleIllustrationViewModel = viewModel(
+        factory = TaleIllustrationViewModelFactory(repository)
+    )
 
     // 현재 경로에 따른 제목 결정
     val currentScreenTitle = remember { mutableStateOf("Tale List") }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val canNavigateBack = remember { mutableStateOf(false)}
+    val canNavigateBack = remember { mutableStateOf(false) }
+
+    // 각 화면에서 전달할 actions
+    var topBarActions by remember { mutableStateOf<@Composable (() -> Unit)?>(null) }
+
+
     Log.d("MyAPp", "update!!!")
     Scaffold(
         topBar = {
@@ -69,11 +89,11 @@ fun MyApp() {
                         currentScreenTitle.value,
                         fontFamily = FontFamily.Serif,
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = if (currentScreenTitle.value.length > 10) 30.sp else 45.sp,
+                        fontSize = if (currentScreenTitle.value.length > 8) 30.sp else 45.sp,
                     )
                 },
                 navigationIcon = {
-                    if (canNavigateBack.value){
+                    if (canNavigateBack.value) {
                         IconButton(onClick = {
                             navController.popBackStack()
                         }) {
@@ -84,25 +104,46 @@ fun MyApp() {
                         }
                     }
                 },
+                actions = {
+                    topBarActions?.invoke()
+                },
                 scrollBehavior = scrollBehavior
             )
         },
         content = { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = TaleList,
+                startDestination = "UserInfoScreen",
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable<TaleList> {
+                composable("UserInfoScreen") {
                     canNavigateBack.value = false
+                    topBarActions = null // actions 비우기
+                    currentScreenTitle.value = "TaleVoice" // 화면에 따른 제목
+                    UserInfoScreen(navController)
+                }
+                composable("TaleList/{name}/{gender}") { backStackEntry ->
+                    canNavigateBack.value = true
+                    topBarActions = null // actions 비우기
+                    val name = backStackEntry.arguments?.getString("name")
+                    val gender = backStackEntry.arguments?.getString("gender")
                     currentScreenTitle.value = "동화 리스트" // 화면에 따른 제목
-                    TaleListScreen(navController)
+                    TaleListScreen(navController, illustrationViewModel, name, gender)
                 }
                 composable<TaleItem> { backStackEntry ->
                     canNavigateBack.value = true
                     val taleItem: TaleItem = backStackEntry.toRoute()
                     currentScreenTitle.value = taleItem.title // 화면에 따른 제목
-                    TaleContentScreen(taleItem)
+                    Log.d("MyApp", "Setting topBarActions for TaleContentScreen")
+                    topBarActions = if (taleItem.image.isNotEmpty()) {
+                        null
+                    } else {
+                        {
+                            TaleContentTopBarActions(taleItem)
+                        }
+                    }
+
+                    TaleContentScreen(taleItem, illustrationViewModel)
                 }
             }
         }

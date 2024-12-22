@@ -1,0 +1,12 @@
+@startuml
+left to right direction
+actor "User" as fc
+rectangle "맞춤 형 동화 생성 및 보기" {
+    usecase "개인정보 입력 받기" as UC1
+    usecase "개인 정보 기반 맞춤형 동화 생성" as UC2
+    usecase "동화 내용 보기" as UC3
+    (UC2) .> (UC3) : include
+}
+fc --> UC1
+fc --> UC2
+@enduml

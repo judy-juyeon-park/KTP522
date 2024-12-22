@@ -11,11 +11,14 @@ node Client{
     package <<layer>>\nViewModel {
         component MTaleListViewModel as TaleListViewModel
         component MTaleDetailViewModel as TaleDetailViewModel
+        component MUserInfoViewModel as UserInfoViewModel
+        component MTaleIllustrationViewModel as TaleIllustrationViewModel
     }
 
     package <<layer>>\nView {
         component TaleListActivity
         component TaleDetailActivity
+        component UserInfoActivity
     }
 
     database TaleClientDB
@@ -56,6 +59,11 @@ TaleDetailViewModel ..> TaleRepository
 
 TaleListViewModel ..> TaleListActivity
 TaleDetailViewModel ..> TaleDetailActivity
+
+TaleIllustrationViewModel ..> TaleRepository
+TaleIllustrationViewModel ..> TaleDetailActivity
+
+UserInfoViewModel ..> UserInfoActivity
 
 TaleApiService ..> Router
 TaleController ..> TaleApiService
